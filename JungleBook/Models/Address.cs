@@ -1,6 +1,8 @@
-﻿namespace Repository.Models
+﻿
+
+namespace JungleBook.Models
 {
-	public JungleBook Address
+	public class Address
 	{
 		public int AddressId { get; set; }
 		public string Street { get; set; }

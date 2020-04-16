@@ -7,7 +7,7 @@ namespace JungleBook.Contracts
 {
 	public interface IRepositoryWrapper
 	{
-		IAccomodationRepository Accomodation { get; }
+		IAccommodationRepository Accomodation { get; }
 		IActivityRepository Activity { get; }
 		IAddressRepository Address { get; }
 		IDayRepository Day { get; }
