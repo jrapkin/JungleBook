@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace JungleBook.Contracts
 {
-	interface IAccommodationRepository
+	public interface IAccommodationRepository
 	{
 	}
 }

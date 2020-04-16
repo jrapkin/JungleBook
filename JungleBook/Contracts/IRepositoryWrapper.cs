@@ -5,7 +5,14 @@ using System.Threading.Tasks;
 
 namespace JungleBook.Contracts
 {
-	interface IRepositoryWrapper
+	public interface IRepositoryWrapper
 	{
+		IAccomodationRepository Accomodation { get; }
+		IActivityRepository Activity { get; }
+		IAddressRepository Address { get; }
+		IDayRepository Day { get; }
+		IDestinationRepository Destination { get; }
+		ITripRepository Trip { get; }
+		void Save();
 	}
 }
