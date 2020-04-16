@@ -19,6 +19,7 @@ namespace JungleBook.Data
 		public DbSet<Day> Days { get; set; }
 		public DbSet<Destination> Destinations { get; set; }
 		public DbSet<Trip> Trips { get; set; }
+		public DbSet<Traveler> Travelers { get; set; }
 		public DbSet<UserProfile> UserProfiles { get; set; }
 		public DbSet<DayActivity> DayActivities { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,11 +34,11 @@ namespace JungleBook.Data
 						.HasOne(a => a.Activity)
 						.WithMany(a => a.DayActivities)
 						.HasForeignKey(a => a.ActivityId);
-			modelBuilder.Entity<UserProfile>().HasKey(u => new { u.ApplicationUserId, u.TripId });
+			modelBuilder.Entity<UserProfile>().HasKey(u => new { u.TravelerId, u.TripId });
 			modelBuilder.Entity<UserProfile>()
-						.HasOne(u => u.ApplicationUser)
+						.HasOne(u => u.Traveler)
 						.WithMany(u => u.UserProfiles)
-						.HasForeignKey(u => u.ApplicationUserId);
+						.HasForeignKey(u => u.TravelerId);
 			modelBuilder.Entity<UserProfile>()
 						.HasOne(t => t.Trip)
 						.WithMany(t => t.UserProfiles)

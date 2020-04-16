@@ -15,6 +15,7 @@ namespace JungleBook
 		private IAddressRepository _address;
 		private IDayRepository _day;
 		private IDestinationRepository _destination;
+		private ITravelerRepository _traveler;
 		private ITripRepository _trip;
 		public RepositoryWrapper(ApplicationDbContext context)
 		{
@@ -73,6 +74,17 @@ namespace JungleBook
 					_destination = new DestinationRepository(_context);
 				}
 				return _destination;
+			}
+		}
+		public ITravelerRepository Traveler
+		{
+			get
+			{
+				if (_traveler ==null)
+				{
+					_traveler = new TravelerRepository(_context);
+				}
+				return _traveler;
 			}
 		}
 		public ITripRepository Trip

@@ -8,6 +8,5 @@ namespace JungleBook.Models
 		public string CustomTag { get; set; }
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
-		public List<UserProfile> UserProfiles { get; set; }
 	}
 }
