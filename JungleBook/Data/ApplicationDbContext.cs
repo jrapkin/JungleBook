@@ -21,9 +21,9 @@ namespace JungleBook.Data
 		public DbSet<Trip> Trips { get; set; }
 		public DbSet<UserProfile> UserProfiles { get; set; }
 		public DbSet<DayActivity> DayActivities { get; set; }
-
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			base.OnModelCreating(modelBuilder);
 			modelBuilder.Entity<DayActivity>().HasKey(d => new { d.DayId, d.ActivityId });
 			modelBuilder.Entity<DayActivity>()
 						.HasOne(d => d.Day)

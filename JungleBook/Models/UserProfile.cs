@@ -6,7 +6,7 @@ namespace JungleBook.Models
 	public class UserProfile
 	{
 		[ForeignKey("ApplicationUser")]
-		public int ApplicationUserId { get; set; }
+		public string ApplicationUserId { get; set; }
 		public ApplicationUser ApplicationUser { get; set; }
 		[ForeignKey("Trip")]
 		public int TripId { get; set; }

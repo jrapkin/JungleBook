@@ -9,7 +9,7 @@ namespace JungleBook.Models
 		public int DayId { get; set; }
 		public DateTime DayOfWeek { get; set; }
 		[ForeignKey("Accommodation")]
-		public int AccommodationId { get; set; }
+		public int? AccommodationId { get; set; }
 		public Accommodation Accommodation {get; set;}
 		public List<DayActivity> DayActivities { get; set; }
 	}
