@@ -13,5 +13,6 @@ namespace JungleBook.Data
 			: base(applicationDbContext)
 		{
 		}
+		public void CreateTraveler(Traveler traveler) => Create(traveler);
 	}
 }

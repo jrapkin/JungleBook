@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +13,9 @@ namespace JungleBook.Models
 		public string LastName { get; set; }
 		public string UserName { get; set; }
 		public string Email { get; set; }
+		[ForeignKey("ApplicationUser")]
+		public string ApplicationUserId { get; set; }
+		public ApplicationUser ApplicationUser { get; set; }
 		public List<UserProfile> UserProfiles { get; set; }
 
 	}

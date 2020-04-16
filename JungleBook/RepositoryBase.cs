@@ -14,6 +14,7 @@ namespace JungleBook
 		{
 			ApplicationDbContext = applicationDbContext;
 		}
+
 		public IQueryable<T> FindAll()
 		{
 			return ApplicationDbContext.Set<T>().AsNoTracking();
