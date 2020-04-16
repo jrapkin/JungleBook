@@ -12,6 +12,8 @@ using JungleBook.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using JungleBook.Models;
+using JungleBook.Contracts;
 
 namespace JungleBook
 {
@@ -30,8 +32,10 @@ namespace JungleBook
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(
 					Configuration.GetConnectionString("DefaultConnection")));
-			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-				.AddEntityFrameworkStores<ApplicationDbContext>();
+			services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+			services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+				.AddEntityFrameworkStores<ApplicationDbContext>()
+				.AddDefaultUI();
 			services.AddControllersWithViews();
 			services.AddRazorPages();
 		}

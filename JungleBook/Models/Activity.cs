@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JungleBook.Models
 {
@@ -10,5 +11,6 @@ namespace JungleBook.Models
 		[ForeignKey ("Address")]
 		public int AddressId { get; set; }
 		public Address Address { get; set; }
+		public List<DayActivity> DayActivities { get; set; }
 	}
 }

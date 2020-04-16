@@ -5,11 +5,12 @@ namespace JungleBook.Models
 {
 	public class UserProfile
 	{
-		[ForeignKey("IdentityUser")]
-		public int IdentityUserId { get; set; }
-		public IdentityUser IdentityUser { get; set; }
+		[ForeignKey("ApplicationUser")]
+		public int ApplicationUserId { get; set; }
+		public ApplicationUser ApplicationUser { get; set; }
 		[ForeignKey("Trip")]
 		public int TripId { get; set; }
 		public Trip Trip { get; set; }
+
 	}
 }
