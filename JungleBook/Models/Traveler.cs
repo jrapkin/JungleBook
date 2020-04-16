@@ -16,6 +16,7 @@ namespace JungleBook.Models
 		[ForeignKey("ApplicationUser")]
 		public string ApplicationUserId { get; set; }
 		public ApplicationUser ApplicationUser { get; set; }
+		[NotMapped]
 		public List<UserProfile> UserProfiles { get; set; }
 
 	}

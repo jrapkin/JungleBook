@@ -17,6 +17,7 @@ namespace JungleBook
 		private IDestinationRepository _destination;
 		private ITravelerRepository _traveler;
 		private ITripRepository _trip;
+		private IUserProfileRepository _userProfile;
 		public RepositoryWrapper(ApplicationDbContext context)
 		{
 			_context = context;
@@ -96,6 +97,17 @@ namespace JungleBook
 					_trip = new TripRepository(_context);
 				}
 				return _trip;
+			}
+		}
+		public IUserProfileRepository UserProfile
+		{
+			get
+			{
+				if(_userProfile ==null)
+				{
+					_userProfile = new UserProfileRepository(_context);
+				}
+				return _userProfile;
 			}
 		}
 		public void Save()

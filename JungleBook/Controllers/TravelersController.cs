@@ -31,7 +31,12 @@ namespace JungleBook.Controllers
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 traveler.ApplicationUserId = userId;
-                _repo.Traveler.Create(traveler);
+                _repo.Traveler.CreateTraveler(traveler);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
             }
         }
         public IActionResult CreateTrip()

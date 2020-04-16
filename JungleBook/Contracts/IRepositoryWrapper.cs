@@ -14,6 +14,7 @@ namespace JungleBook.Contracts
 		IDestinationRepository Destination { get; }
 		ITravelerRepository Traveler { get; }
 		ITripRepository Trip { get; }
+		IUserProfileRepository UserProfile { get; }
 		void Save();
 	}
 }
