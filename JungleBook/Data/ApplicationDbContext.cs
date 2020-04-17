@@ -43,6 +43,12 @@ namespace JungleBook.Data
 						.HasOne(t => t.Trip)
 						.WithMany(t => t.UserProfiles)
 						.HasForeignKey(t => t.TripId);
+			modelBuilder.Entity<Destination>()
+						.HasOne(t => t.Trip)
+						.WithMany(d => d.Destinations);
+			modelBuilder.Entity<Day>()
+						.HasOne(d => d.Destination)
+						.WithMany(d => d.Days);
 		}
 	}
 }

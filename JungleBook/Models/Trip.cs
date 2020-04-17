@@ -11,7 +11,7 @@ namespace JungleBook.Models
 		public double EstimatedCost { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
-		[NotMapped]
+		public List<Destination> Destinations { get; set; }
 		public List<UserProfile> UserProfiles { get; set; }
 	}
 }
