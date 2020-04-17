@@ -15,5 +15,6 @@ namespace JungleBook.Data
 		public void CreateTrip(Trip trip) => Create(trip);
 		public ICollection<Trip> GetAllTrips() => FindAll().ToList();
 		public Trip GetTripById(int tripId) => FindByCondition(t => t.TripId == tripId).FirstOrDefault();
+
 	}
 }

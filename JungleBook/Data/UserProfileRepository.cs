@@ -26,7 +26,15 @@ namespace JungleBook.Data
 			return FindByCondition(t => t.TravelerId == travelerId)
 				.Include(t => t.Trip)
 				.Select(t => t.Trip).ToList();
-				
+		}
+		public UserProfile GetUserProfileByIds(int travelerId, int tripId)
+		{
+			return FindByCondition(t => t.TravelerId == travelerId && t.TripId == tripId)
+				.Include(t => t.Trip)
+				.ThenInclude(d => d.Destinations)
+				.ThenInclude(d => d.Days)
+				.ThenInclude(da => da.DayActivities)
+				.FirstOrDefault();
 		}
 	}
 }

@@ -10,5 +10,6 @@ namespace JungleBook.Contracts
 	{
 		void CreateUserProfile(Trip trip, Traveler traveler);
 		List<Trip> GetAllTripsByTraveler(int travelerId);
+		UserProfile GetUserProfileByIds(int travelerId, int tripId);
 	}
 }

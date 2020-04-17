@@ -11,6 +11,7 @@ namespace JungleBook.Contracts
 	{
 		ICollection<Trip> GetAllTrips();
 		Trip GetTripById(int tripId);
+		
 		void CreateTrip(Trip trip);
 	}
 }
