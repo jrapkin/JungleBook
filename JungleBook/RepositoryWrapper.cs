@@ -14,6 +14,7 @@ namespace JungleBook
 		private IActivityRepository _activity;
 		private IAddressRepository _address;
 		private IDayRepository _day;
+		private IDayActivityRepository _dayActivity;
 		private IDestinationRepository _destination;
 		private ITravelerRepository _traveler;
 		private ITripRepository _trip;
@@ -64,6 +65,17 @@ namespace JungleBook
 					_day = new DayRepository(_context);
 				}
 				return _day;
+			}
+		}
+		public IDayActivityRepository DayActivity
+		{
+			get
+			{
+				if (_dayActivity == null)
+				{
+					_dayActivity = new DayActivityRepository(_context);
+				}
+				return _dayActivity;
 			}
 		}
 		public IDestinationRepository Destination
