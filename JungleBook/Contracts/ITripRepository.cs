@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JungleBook.Contracts
 {
-	public interface ITripRepository
+	public interface ITripRepository : IRepositoryBase<Trip>
 	{
 		ICollection<Trip> GetAllTrips();
 		Trip GetTripById(int tripId);

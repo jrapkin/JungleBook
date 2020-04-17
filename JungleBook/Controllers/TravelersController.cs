@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using JungleBook.Contracts;
 using JungleBook.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JungleBook.Controllers
 {
@@ -18,27 +19,39 @@ namespace JungleBook.Controllers
         }
         public IActionResult Index()
         {
+            string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (_repo.Traveler.FindByCondition(t => t.ApplicationUserId == userId).Any())
+            {
+                //do stuff
+            }
+            else
+            {
+                RedirectToAction("Register");
+            }
             return View();
         }
-        public IActionResult Create()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Create(Traveler traveler)
-        {
-            try
-            {
-                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                traveler.ApplicationUserId = userId;
-                _repo.Traveler.CreateTraveler(traveler);
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //May be an unnecessary view, remove if not used.
+
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public IActionResult Create(Traveler traveler)
+        //{
+        //    try
+        //    {
+        //        var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //        traveler.ApplicationUserId = userId;
+        //        _repo.Traveler.CreateTraveler(traveler);
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
         public IActionResult CreateTrip()
         {
             return View();

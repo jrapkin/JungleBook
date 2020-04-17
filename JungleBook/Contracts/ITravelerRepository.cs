@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JungleBook.Contracts
 {
-	public interface ITravelerRepository
+	public interface ITravelerRepository : IRepositoryBase<Traveler>
 	{
 		void CreateTraveler(Traveler traveler);
 	}

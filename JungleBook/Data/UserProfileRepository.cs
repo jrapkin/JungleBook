@@ -1,9 +1,7 @@
 ﻿using JungleBook.Models;
 using JungleBook.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace JungleBook.Data
 {
@@ -12,11 +10,14 @@ namespace JungleBook.Data
 		public UserProfileRepository(ApplicationDbContext applicationDbContext)
 			: base(applicationDbContext)
 		{
-
 		}
 		public void CreateUserProfile(UserProfile userProfile)
 		{
 			Create(userProfile);
+		}
+		public List<UserProfile> GetAllTripsByTraveler(int travelerId)
+		{
+			return FindByCondition(t => t.TravelerId == travelerId).ToList();
 		}
 	}
 }
