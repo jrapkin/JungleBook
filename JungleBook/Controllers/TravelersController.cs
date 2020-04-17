@@ -95,12 +95,22 @@ namespace JungleBook.Controllers
         }
         public IActionResult PlanTrip(int id)
         {
-
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
-            var profileFromDb = _repo.UserProfile.GetUserProfileByIds(traveler.TravelerId, id);
-            var daysActivities = _repo.DayActivity.GetActivitiesByDay(profileFromDb.Trip.Destinations);
-            
+            //var profileFromDb = _repo.UserProfile.GetUserProfileByIds(traveler.TravelerId, id);
+            //List<Traveler> TravelersOnTrip = _repo.UserProfile.GetAllTravelersByTrip(id);
+            //List<DayActivity> daysActivities = _repo.DayActivity.GetActivitiesByDay(profileFromDb.Trip.Destinations);
+            TripViewModel tripViewModel = new TripViewModel()
+            {
+                TravelerLoggedIn = traveler,
+                TravelBuddies = _repo.UserProfile.GetAllTravelersByTrip(id),
+                UserProfile = _repo.UserProfile.GetUserProfileByIds(traveler.TravelerId, id)
+            };
+            tripViewModel.DayActivities = _repo.DayActivity.GetActivitiesByDay(tripViewModel.UserProfile.Trip.Destinations);
+            return View(tripViewModel);
+        }
+        public IActionResult InviteCollaborators()
+        {
             return View();
         }
         
