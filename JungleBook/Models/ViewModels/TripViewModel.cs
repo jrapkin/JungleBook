@@ -7,5 +7,9 @@ namespace JungleBook.Models.ViewModels
 {
 	public class TripViewModel
 	{
+		public Traveler TravelerLoggedIn { get; set; }
+		public List<Traveler> TravelBuddies { get; set; }
+		public UserProfile UserProfile { get; set; }
+		public List<DayActivity> DayActivities { get; set; }
 	}
 }
