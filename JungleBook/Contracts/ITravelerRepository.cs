@@ -9,5 +9,6 @@ namespace JungleBook.Contracts
 	public interface ITravelerRepository : IRepositoryBase<Traveler>
 	{
 		void CreateTraveler(Traveler traveler);
+		Traveler GetTravelerByUserId(string userId);
 	}
 }

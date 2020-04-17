@@ -8,7 +8,7 @@ namespace JungleBook.Contracts
 {
 	public interface IUserProfileRepository : IRepositoryBase<UserProfile>
 	{
-		void CreateUserProfile(UserProfile userProfile);
-		List<UserProfile> GetAllTripsByTraveler(int travelerId);
+		void CreateUserProfile(Trip trip, Traveler traveler);
+		List<Trip> GetAllTripsByTraveler(int travelerId);
 	}
 }

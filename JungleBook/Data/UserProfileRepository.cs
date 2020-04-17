@@ -2,6 +2,7 @@
 using JungleBook.Contracts;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace JungleBook.Data
 {
@@ -11,13 +12,21 @@ namespace JungleBook.Data
 			: base(applicationDbContext)
 		{
 		}
-		public void CreateUserProfile(UserProfile userProfile)
+		public void CreateUserProfile(Trip trip, Traveler traveler)
 		{
+			UserProfile userProfile = new UserProfile()
+			{ 
+				TripId = trip.TripId, 
+				TravelerId = traveler.TravelerId 
+			};
 			Create(userProfile);
 		}
-		public List<UserProfile> GetAllTripsByTraveler(int travelerId)
+		public List<Trip> GetAllTripsByTraveler(int travelerId)
 		{
-			return FindByCondition(t => t.TravelerId == travelerId).ToList();
+			return FindByCondition(t => t.TravelerId == travelerId)
+				.Include(t => t.Trip)
+				.Select(t => t.Trip).ToList();
+				
 		}
 	}
 }

@@ -11,5 +11,9 @@ namespace JungleBook.Data
 		{
 		}
 		public void CreateTraveler(Traveler traveler) => Create(traveler);
+		public Traveler GetTravelerByUserId(string userId)
+		{
+			return FindByCondition(t => t.ApplicationUserId == userId).FirstOrDefault();
+		}
 	}
 }

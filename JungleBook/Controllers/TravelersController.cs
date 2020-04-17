@@ -59,24 +59,39 @@ namespace JungleBook.Controllers
         [HttpPost]
         public IActionResult CreateTrip(Trip tripFromForm)
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Traveler travelerFromDB = _repo.Traveler.GetTravelerByUserId(userId);
             _repo.Trip.CreateTrip(tripFromForm);
+            _repo.Save();
+            _repo.UserProfile.CreateUserProfile(tripFromForm, travelerFromDB);
+            _repo.Save();
 
             return RedirectToAction("Trips");
             
         }
-        public IActionResult Trips()
+        public IActionResult Trips(int travelerId)
         {
-            List<Trip> trips = _repo.Trip.GetAllTrips().ToList();
-            if(trips != null)
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
+            
+            List<Trip> trips = _repo.UserProfile.GetAllTripsByTraveler(traveler.TravelerId).ToList();
+            if(trips.Any())
             {
-                //do stuff
-                
+                return View(trips);
             }
-            else
-            {
-                RedirectToAction("CreateTrip");
-            }
-            return View();
+            //If deciding to go single page app- redirect to create trip
+            //else
+            //{
+            //    RedirectToAction("CreateTrip");
+            //}
+
+            return View(trips);
         }
+        public IActionResult TripDetails(int id)
+        {
+            var tripFromDb = _repo.Trip.GetTripById(id);
+            return View(tripFromDb);
+        }
+        
     }
 }

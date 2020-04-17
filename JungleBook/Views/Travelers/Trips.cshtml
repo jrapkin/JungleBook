@@ -1,0 +1,54 @@
+﻿@model IEnumerable<JungleBook.Models.Trip>
+
+@{
+    ViewData["Title"] = "Trips";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Trips</h1>
+@if (Model.Any() == false)
+{
+<p>
+    <a asp-action="CreateTrip">Create New</a>
+</p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EstimatedCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@if (Model.Any())
+{
+    @foreach (var item in Model)
+    {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EstimatedCost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.TripId">Edit</a> |
+                    @Html.ActionLink("View Trip Details", "TripDetails", new { id = item.TripId }) |
+                    <a asp-action="Delete" asp-route-id="@item.TripId">Delete</a>
+                </td>
+            </tr>
+    }
+}
+    </tbody>
+</table>
