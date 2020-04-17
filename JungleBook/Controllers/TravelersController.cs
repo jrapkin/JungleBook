@@ -7,6 +7,7 @@ using JungleBook.Contracts;
 using JungleBook.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using JungleBook.Models.ViewModels;
 
 namespace JungleBook.Controllers
 {
@@ -91,6 +92,16 @@ namespace JungleBook.Controllers
         {
             var tripFromDb = _repo.Trip.GetTripById(id);
             return View(tripFromDb);
+        }
+        public IActionResult PlanTrip(int id)
+        {
+
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
+            var profileFromDb = _repo.UserProfile.GetUserProfileByIds(traveler.TravelerId, id);
+            var daysActivities = _repo.DayActivity.GetActivitiesByDay(profileFromDb.Trip.Destinations);
+            
+            return View();
         }
         
     }
