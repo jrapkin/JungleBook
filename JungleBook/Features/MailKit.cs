@@ -19,6 +19,20 @@ namespace JungleBook.Features
 			}
 			return CreateEmail(senderAddress, recipientAddresses, messageText);
 		}
+		public static MimeMessage CreateEmail(MailboxAddress senderAddress, List<MailboxAddress> listOfRecipients, string messageText)
+		{
+			MimeMessage message = new MimeMessage();
+			message.From.Add(senderAddress);
+			foreach (MailboxAddress address in listOfRecipients)
+			{
+				message.To.Add(address);
+			}
+			message.Body = new TextPart("plain")
+			{
+				Text = messageText
+			};
+			return message;
+		}
 
 	}
 }
