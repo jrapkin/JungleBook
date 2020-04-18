@@ -33,6 +33,16 @@ namespace JungleBook.Features
 			};
 			return message;
 		}
-
+		public static void SendEmailInvitation(MimeMessage message, string email, string password)
+		{
+			using (SmtpClient client = new SmtpClient())
+			{
+				client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+				client.Connect("smtp.gmail.com", 587, false);
+				client.Authenticate(email, password);
+				client.Send(message);
+				client.Disconnect(true);
+			};
+		}
 	}
 }
