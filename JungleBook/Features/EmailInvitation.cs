@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace JungleBook.Features
 {
-	public static class MailKit
+	public static class EmailInvitation
 	{
-		public static MimeMessage CreateEmail(string name, string from, List<string> listOfRecipients, string messageText)
+		public static MimeMessage CreateEmail(string from, List<string> listOfRecipients, string messageText)
 		{
 			MailboxAddress senderAddress = new MailboxAddress(name, from);
 			List<MailboxAddress> recipientAddresses = new List<MailboxAddress>();

@@ -8,6 +8,8 @@ using JungleBook.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using JungleBook.Models.ViewModels;
+using JungleBook.Features;
+using MimeKit;
 
 namespace JungleBook.Controllers
 {
@@ -97,9 +99,6 @@ namespace JungleBook.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
-            //var profileFromDb = _repo.UserProfile.GetUserProfileByIds(traveler.TravelerId, id);
-            //List<Traveler> TravelersOnTrip = _repo.UserProfile.GetAllTravelersByTrip(id);
-            //List<DayActivity> daysActivities = _repo.DayActivity.GetActivitiesByDay(profileFromDb.Trip.Destinations);
             TripViewModel tripViewModel = new TripViewModel()
             {
                 TravelerLoggedIn = traveler,
@@ -111,7 +110,17 @@ namespace JungleBook.Controllers
         }
         public IActionResult InviteCollaborators()
         {
-            return View();
+            Message message = new Message();
+            message.SenderAddress = this.User.FindFirstValue(ClaimTypes.Email.ToLower());
+            return View(message);
+        }
+        [HttpPost]
+        public IActionResult InviteCollaborators(Message message)
+        {
+            List<string> recipients = message.RecipientAddress.Split(", ").ToList();
+            MimeMessage email = EmailInvitation.CreateEmail(message.SenderAddress, recipients, message.MessageBody);
+            EmailInvitation.SendEmailInvitation(email, API_Keys.EmailAddress, API_Keys.EmailPassword);
+            return RedirectToAction(nameof(Index));
         }
         
     }
