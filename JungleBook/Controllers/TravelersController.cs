@@ -61,6 +61,8 @@ namespace JungleBook.Controllers
         //        return View();
         //    }
         //}
+
+        //ConsiderPartialView
         public IActionResult CreateDestination()
         {
             return View();
@@ -68,11 +70,14 @@ namespace JungleBook.Controllers
         [HttpPost]
         public IActionResult CreateDestination(Destination newDestination)
         {
-            _repo.Address.CreateAddress(newDestination.Address);
-            _repo.Save();
             string url = ConvertCityStateCountryToUrl(newDestination.Address);
             JObject resultsFromGoogle = _googleServices.GetDestinationInformation(url).Result;
+            SetLatLongAndPlaceId(newDestination, resultsFromGoogle);
+            _repo.Address.CreateAddress(newDestination.Address);
+            _repo.Save();
+            newDestination.AddressId = newDestination.Address.AddressId;
             _repo.Destination.CreateDestination(newDestination);
+            _repo.Save();
             return RedirectToAction("Trips");
         }
         public IActionResult CreateTrip()
@@ -84,8 +89,6 @@ namespace JungleBook.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler travelerFromDB = _repo.Traveler.GetTravelerByUserId(userId);
-
-            _repo.Destination.CreateDestination(newDestination);
             _repo.Trip.CreateTrip(tripFromForm);
             _repo.Save();
             _repo.UserProfile.CreateUserProfile(tripFromForm, travelerFromDB);
@@ -174,6 +177,11 @@ namespace JungleBook.Controllers
         {
             return resultsFromGoogleServiceCall.SelectToken("results.place_id").ToString();
         }
-
+        private void SetLatLongAndPlaceId(Destination destination, JObject resultsFromGoogle)
+        {
+            destination.Address.Longitude = GetLongitude(resultsFromGoogle);
+            destination.Address.Latitude = GetLatitude(resultsFromGoogle);
+            destination.PlaceId = GetPlaceId(resultsFromGoogle);
+        }
     }
 }
