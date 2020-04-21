@@ -149,6 +149,10 @@ namespace JungleBook.Controllers
             string url = $"{htmlCall},+{city},+{state},{country}{API_Keys.GoogleServicesKey}";
             return url;
         }
+        private double GetLatitude(JObject resultsFromGoogleServiceCall)
+        {
+            return Double.Parse(resultsFromGoogleServiceCall.SelectToken("results.geometry.location.lat").ToString());
+        }
 
     }
 }
