@@ -12,6 +12,7 @@ namespace JungleBook.Models
 		public Trip Trip { get; set; }
 		public int AddressId { get; set; }
 		public Address Address { get; set; }
+		public string PlaceId { get; set; }
 		public List<Day> Days { get; set; }
 	}
 }
