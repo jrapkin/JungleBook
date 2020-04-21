@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using JungleBook.Models;
 using JungleBook.Contracts;
+using Newtonsoft.Json.Linq;
+using JungleBook.Services;
 
 namespace JungleBook
 {
@@ -33,6 +35,8 @@ namespace JungleBook
 				options.UseSqlServer(
 					Configuration.GetConnectionString("DefaultConnection")));
 			services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+			services.AddScoped<IWeatherRequest, Weather>();
+			services.AddScoped<ISearchRequest, Eventful>();
 			services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultUI();
