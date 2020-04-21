@@ -1,4 +1,4 @@
-﻿using JungleBook.Models;
+﻿using JungleBook.Contracts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace JungleBook.Services
 {
-    public class WeatherRequest
+    public class Weather : IWeatherRequest
     {
         //public string ConvertToUrl(string city, string state, string country, DateTime date)
         //{

@@ -10,7 +10,7 @@ namespace JungleBook.Contracts
 	public interface IWeatherRequest
 	{
 		Task<JObject> GetCurrentWeather(string city, string state, string country);
-		Task<JObject> GetThirtyDayForecast(string city, string state, string country, string numberOfDays);
+		Task<JObject> GetFiveDayForecast(string city, string state, string country, string numberOfDays);
 		Task<JObject> GetHistoricalWeather(string city, string state, string country, string startDate, string endDate);
 	}
 }
