@@ -5,13 +5,15 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using JungleBook.Models;
 using JungleBook.Contracts;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace JungleBook.Services
 {
 	public class Eventful : ISearchRequest
 	{
 
-		public async Task<EventSearchResult> Search(string location, string eventKeyword)
+		public async Task<JObject> Search(string location, string eventKeyword)
 		{
 			string url = $"http://api.eventful.com/json/events/search?...&keywords={eventKeyword}&location={location}&date=Future&app_key={API_Keys.EventfulAppKey}";
 			HttpClient client = new HttpClient();
@@ -19,7 +21,7 @@ namespace JungleBook.Services
 			if (response.IsSuccessStatusCode)
 			{
 				string json = await response.Content.ReadAsStringAsync();
-				EventSearchResult events = JsonConvert.DeserializeObject<EventSearchResult>(json);
+				JObject events = JsonConvert.DeserializeObject<JObject>(json);
 				return events;
 			}
 			return null;

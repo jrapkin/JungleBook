@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using JungleBook.Models.ViewModels;
 using MimeKit;
 using JungleBook.Services;
+using Newtonsoft.Json.Linq;
 
 namespace JungleBook.Controllers
 {
@@ -133,7 +134,7 @@ namespace JungleBook.Controllers
         [HttpPost]
         public async Task<PartialViewResult> ShowEvents(string location, string eventKeyword)
         {
-            EventSearchResult events = await _searchRequest.Search(location, eventKeyword);
+            JObject events = await _searchRequest.Search(location, eventKeyword);
             return PartialView(events);
         }
     }
