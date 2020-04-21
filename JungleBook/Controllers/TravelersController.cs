@@ -61,7 +61,20 @@ namespace JungleBook.Controllers
         //        return View();
         //    }
         //}
-
+        public IActionResult CreateDestination()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult CreateDestination(Destination newDestination)
+        {
+            _repo.Address.CreateAddress(newDestination.Address);
+            _repo.Save();
+            string url = ConvertCityStateCountryToUrl(newDestination.Address);
+            JObject resultsFromGoogle = _googleServices.GetDestinationInformation(url).Result;
+            _repo.Destination.CreateDestination(newDestination);
+            return RedirectToAction("Trips");
+        }
         public IActionResult CreateTrip()
         {
             return View();
@@ -161,5 +174,6 @@ namespace JungleBook.Controllers
         {
             return resultsFromGoogleServiceCall.SelectToken("results.place_id").ToString();
         }
+
     }
 }
