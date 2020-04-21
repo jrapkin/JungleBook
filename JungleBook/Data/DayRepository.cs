@@ -10,5 +10,9 @@ namespace JungleBook.Data
 		{
 
 		}
+		public void CreateDay(Day day)
+		{
+			Create(day);
+		}
 	}
 }

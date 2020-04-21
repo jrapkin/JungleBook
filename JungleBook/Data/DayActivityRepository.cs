@@ -26,5 +26,9 @@ namespace JungleBook.Data
 			}
 			return filteredActivities;
 		}
+		public void CreateDayActivity(DayActivity dayActivity)
+		{
+			Create(dayActivity);
+		}
 	}
 }
