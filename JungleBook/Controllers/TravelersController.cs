@@ -8,17 +8,20 @@ using JungleBook.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using JungleBook.Models.ViewModels;
-using JungleBook.Features;
 using MimeKit;
+using JungleBook.Services;
 
 namespace JungleBook.Controllers
 {
     public class TravelersController : Controller
     {
         private IRepositoryWrapper _repo;
-        public TravelersController(IRepositoryWrapper repo)
+        private ISearchRequest _searchRequest;
+        public TravelersController(IRepositoryWrapper repo, ISearchRequest searchRequest)
         {
             _repo = repo;
+            _searchRequest = searchRequest;
+
         }
         public IActionResult Index()
         {
@@ -123,5 +126,15 @@ namespace JungleBook.Controllers
             return RedirectToAction(nameof(Index));
         }
         
+        public IActionResult ShowEvents()
+        {
+            return PartialView("ShowEvents");
+        }
+        [HttpPost]
+        public async Task<PartialViewResult> ShowEvents(string location, string eventKeyword)
+        {
+            EventSearchResult events = await _searchRequest.Search(location, eventKeyword);
+            return PartialView(events);
+        }
     }
 }
