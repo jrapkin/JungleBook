@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JungleBook.Contracts
 {
-	interface IGoogleServices
+	public interface IGoogleServices
 	{
 		Task<JObject> GetDestinationInformation(string url);
 	}

@@ -18,10 +18,12 @@ namespace JungleBook.Controllers
     {
         private IRepositoryWrapper _repo;
         private ISearchRequest _searchRequest;
-        public TravelersController(IRepositoryWrapper repo, ISearchRequest searchRequest)
+        private IGoogleServices _googleServices;
+        public TravelersController(IRepositoryWrapper repo, ISearchRequest searchRequest, IGoogleServices googleServices)
         {
             _repo = repo;
             _searchRequest = searchRequest;
+            _googleServices = googleServices;
 
         }
         public IActionResult Index()
@@ -59,22 +61,23 @@ namespace JungleBook.Controllers
         //        return View();
         //    }
         //}
+
         public IActionResult CreateTrip()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult CreateTrip(Trip tripFromForm)
+        public IActionResult CreateTrip(Trip tripFromForm, Destination newDestination)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler travelerFromDB = _repo.Traveler.GetTravelerByUserId(userId);
+
+            _repo.Destination.CreateDestination(newDestination);
             _repo.Trip.CreateTrip(tripFromForm);
             _repo.Save();
             _repo.UserProfile.CreateUserProfile(tripFromForm, travelerFromDB);
             _repo.Save();
-
-            return RedirectToAction("Trips");
-            
+            return RedirectToAction("Trips"); 
         }
         public IActionResult Trips(int travelerId)
         {
@@ -137,5 +140,15 @@ namespace JungleBook.Controllers
             JObject events = await _searchRequest.Search(location, eventKeyword);
             return PartialView(events);
         }
+        private string ConvertCityStateCountryToUrl(Address address)
+        {
+            string city = address.City.Replace(' ', '+');
+            string state = address.State.Replace(' ', '+');
+            string country = address.Country.Replace(' ', '+');
+            string htmlCall = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+            string url = $"{htmlCall},+{city},+{state},{country}{API_Keys.GoogleServicesKey}";
+            return url;
+        }
+
     }
 }
