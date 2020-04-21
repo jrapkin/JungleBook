@@ -157,5 +157,9 @@ namespace JungleBook.Controllers
         {
             return Double.Parse(resultsFromGoogleServiceCall.SelectToken("results.geometry.location.lng").ToString());
         }
+        private string GetPlaceId(JObject resultsFromGoogleServiceCall)
+        {
+            return resultsFromGoogleServiceCall.SelectToken("results.place_id").ToString();
+        }
     }
 }
