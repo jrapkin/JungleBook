@@ -153,6 +153,9 @@ namespace JungleBook.Controllers
         {
             return Double.Parse(resultsFromGoogleServiceCall.SelectToken("results.geometry.location.lat").ToString());
         }
-
+        private double GetLongitude(JObject resultsFromGoogleServiceCall)
+        {
+            return Double.Parse(resultsFromGoogleServiceCall.SelectToken("results.geometry.location.lng").ToString());
+        }
     }
 }
