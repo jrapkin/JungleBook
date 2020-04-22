@@ -21,7 +21,7 @@ namespace JungleBook.Data
 			{
 				foreach( var day in destination.Days)
 				{
-					filteredActivities.FindAll(d => d.DayId == day.DayId);
+					filteredActivities.AddRange(filteredActivities.FindAll(d => d.DayId == day.DayId));
 				}
 			}
 			return filteredActivities;

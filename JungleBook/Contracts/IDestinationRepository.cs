@@ -8,6 +8,7 @@ namespace JungleBook.Contracts
 {
 	public interface IDestinationRepository : IRepositoryBase<Destination>
 	{
+		List<Destination> GetAllDestinations();
 		void CreateDestination(Destination destination);
 	}
 }
