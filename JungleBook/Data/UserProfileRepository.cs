@@ -3,6 +3,7 @@ using JungleBook.Contracts;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace JungleBook.Data
 {
@@ -39,6 +40,16 @@ namespace JungleBook.Data
 				.ThenInclude(d => d.Days)
 				.ThenInclude(da => da.DayActivities)
 				.FirstOrDefault();
+		}
+		public async Task<UserProfile> GetUserProfileByInviteCode(string username, string tripName)
+		{
+			var traveler = await FindByCondition(u => u.Traveler.UserName == username).FirstOrDefaultAsync();
+			var trip = await FindByCondition(t => t.Trip.Name == tripName).FirstOrDefaultAsync();
+			return await FindByCondition(up => up.TravelerId == traveler.TravelerId && up.TripId == trip.TripId)
+				.Include(t => t.Trip)
+				.ThenInclude(d => d.Destinations)
+				.ThenInclude(d => d.Days)
+				.ThenInclude(da => da.DayActivities).FirstOrDefaultAsync();
 		}
 	}
 }

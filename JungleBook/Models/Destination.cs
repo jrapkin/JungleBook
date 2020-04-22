@@ -7,6 +7,7 @@ namespace JungleBook.Models
 	public class Destination
 	{
 		public int? DestinationId { get; set; }
+		public string Name { get; set; }
 		public DateTime ArrivalDate { get; set; }
 		public DateTime DepartureDate { get; set; }
 		public Trip Trip { get; set; }
