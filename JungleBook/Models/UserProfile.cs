@@ -9,7 +9,7 @@ namespace JungleBook.Models
 		public int TravelerId { get; set; }
 		public Traveler Traveler { get; set; }
 		[ForeignKey("Trip")]
-		public int TripId { get; set; }
+		public int? TripId { get; set; }
 		public Trip Trip { get; set; }
 
 	}
