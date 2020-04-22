@@ -37,6 +37,7 @@ namespace JungleBook
 			services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 			services.AddScoped<IWeatherRequest, Weather>();
 			services.AddScoped<ISearchRequest, Eventful>();
+			services.AddScoped<IGoogleServices, GoogleServices>();
 			services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultUI();

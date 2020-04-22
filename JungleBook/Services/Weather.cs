@@ -24,40 +24,45 @@ namespace JungleBook.Services
         public async Task<JObject> GetCurrentWeather(string city, string state, string country)
         {
             string url = $"https://api.worldweatheronline.com/premium/v1/weather.ashx?q={city},{state},{country}ie&date=today&key={API_Keys.WorldWeather}&format=json";
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync(url);
-            if (response.IsSuccessStatusCode)
+            using HttpClient client = new HttpClient();
             {
-                string json = await response.Content.ReadAsStringAsync();
-                JObject currentWeather = JsonConvert.DeserializeObject<JObject>(json);
-                return currentWeather;
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    JObject currentWeather = JsonConvert.DeserializeObject<JObject>(json);
+                    return currentWeather;
+                }
             }
             return null;
         }
-
         public async Task<JObject> GetFiveDayForecast(string city, string state, string country, string numberOfDays)
         {
             string url = $"https://api.worldweatheronline.com/premium/v1/weather.ashx?q={city},{state},{country}&num_of_days={numberOfDays}&key={API_Keys.WorldWeather}&format=json";
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync(url);
-            if (response.IsSuccessStatusCode)
+            using HttpClient client = new HttpClient();
             {
-                string json = await response.Content.ReadAsStringAsync();
-                JObject fiveDayForecast = JsonConvert.DeserializeObject<JObject>(json);
-                return fiveDayForecast;
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    JObject fiveDayForecast = JsonConvert.DeserializeObject<JObject>(json);
+                    return fiveDayForecast;
+                }
             }
             return null;
         }
         public async Task<JObject> GetHistoricalWeather(string city, string state, string country, string startDate, string endDate)
         {
             string url = $"https://api.worldweatheronline.com/premium/v1/past-weather.ashx?q={city},{state},{country}&date={startDate}&enddate={endDate}&key={API_Keys.WorldWeather}&format=json";
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync(url);
-            if (response.IsSuccessStatusCode)
+            using HttpClient client = new HttpClient();
             {
-                string json = await response.Content.ReadAsStringAsync();
-                JObject fiveDayForecast = JsonConvert.DeserializeObject<JObject>(json);
-                return fiveDayForecast;
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    JObject fiveDayForecast = JsonConvert.DeserializeObject<JObject>(json);
+                    return fiveDayForecast;
+                }
             }
             return null;
         }

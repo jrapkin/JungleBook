@@ -13,8 +13,7 @@ namespace JungleBook.Services
 	{
         public async Task<JObject> GetDestinationInformation(string url)
         {
-            HttpClient client = new HttpClient();
-            using (client)
+            using HttpClient client = new HttpClient();
             {
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
