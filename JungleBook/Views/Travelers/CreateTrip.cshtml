@@ -1,4 +1,4 @@
-﻿@model JungleBook.Models.Trip
+﻿@model JungleBook.Models.ViewModels.TripViewModel
 
 @{
     ViewData["Title"] = "CreateTrip";
@@ -34,7 +34,13 @@
         </form>
     </div>
 </div>
-
+<div>
+    @using (Html.BeginForm(Model.selectedDestinations))
+    {
+        @Html.ListBoxFor(m => m.selectedDestinations, Model.DestinationOptions, Model.selectedDestinations)
+        <input type="submit" value="save" />
+    }
+</div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
