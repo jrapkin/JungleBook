@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace JungleBook.Contracts
 {
-	public interface IAddressRepository
+	public interface IAddressRepository : IRepositoryBase<Address>
 	{
+		ICollection<Address> GetAllAddresses();
 		void CreateAddress(Address address);
+		bool CheckIfAddressExists(Address address);
 	}
 }
