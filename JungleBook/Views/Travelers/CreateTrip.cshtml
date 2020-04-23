@@ -14,33 +14,39 @@
         <form asp-action="CreateTrip">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="EstimatedCost" class="control-label"></label>
-                <input asp-for="EstimatedCost" class="form-control" />
-                <span asp-validation-for="EstimatedCost" class="text-danger"></span>
+                <label asp-for="Trip.Name" class="control-label"></label>
+                <input asp-for="Trip.Name" class="form-control" />
+                <span asp-validation-for="Trip.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+                <label asp-for="Trip.EstimatedCost" class="control-label"></label>
+                <input asp-for="Trip.EstimatedCost" class="form-control" />
+                <span asp-validation-for="Trip.EstimatedCost" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
+                <label asp-for="Trip.StartDate" class="control-label"></label>
+                <input asp-for="Trip.StartDate" class="form-control" />
+                <span asp-validation-for="Trip.StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="Trip.EndDate" class="control-label"></label>
+                <input asp-for="Trip.EndDate" class="form-control" />
+                <span asp-validation-for="Trip.EndDate" class="text-danger"></span>
+            </div>
+            <div>
+
+            </div>
+            <div class="form-group">
+                @using (Html.BeginForm(Model.selectedDestinations))
+                {
+                    @Html.ListBoxFor(m => m.selectedDestinations, Model.DestinationOptions, Model.selectedDestinations)
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                }
             </div>
         </form>
     </div>
 </div>
-<div>
-    @using (Html.BeginForm(Model.selectedDestinations))
-    {
-        @Html.ListBoxFor(m => m.selectedDestinations, Model.DestinationOptions, Model.selectedDestinations)
-        <input type="submit" value="save" />
-    }
-</div>
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

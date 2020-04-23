@@ -18,5 +18,10 @@ namespace JungleBook.Models.ViewModels
 		public List<DayActivity> DayActivities { get; set; }
 		public List<int> selectedDestinations { get; set; }
 		public MultiSelectList DestinationOptions { get; set; }
+		public Message Message { get; set; }
+		//for partial view
+		public string Location { get; set; }
+		public string Keyword { get; set; }
+		public EventSearchResult SearchResults { get; set; }
 	}
 }

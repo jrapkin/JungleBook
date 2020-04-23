@@ -15,7 +15,7 @@
 
 	public class Events
 	{
-		public Event[] _event { get; set; }
+		public Event[] Event { get; set; }
 	}
 
 	public class Event
