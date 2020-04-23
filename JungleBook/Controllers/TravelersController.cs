@@ -11,6 +11,7 @@ using JungleBook.Models.ViewModels;
 using MimeKit;
 using JungleBook.Services;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace JungleBook.Controllers
 {
@@ -28,11 +29,12 @@ namespace JungleBook.Controllers
         }
         public IActionResult Index()
         {
+
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (_repo.Traveler.FindByCondition(t => t.ApplicationUserId == userId).Any())
             {
-                //do stuff
+               //do stuff
             }
             else
             {
@@ -63,37 +65,30 @@ namespace JungleBook.Controllers
         //}
 
         //ConsiderPartialView
-        public IActionResult CreateDestination()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult CreateDestination(Destination newDestination)
-        {
-            string url = ConvertCityStateCountryToUrl(newDestination.Address);
-            JObject resultsFromGoogle = _googleServices.GetDestinationInformation(url).Result;
-            SetLatLongAndPlaceId(newDestination, resultsFromGoogle);
-            _repo.Address.CreateAddress(newDestination.Address);
-            _repo.Save();
-            newDestination.AddressId = newDestination.Address.AddressId;
-            _repo.Destination.CreateDestination(newDestination);
-            _repo.Save();
-            return RedirectToAction("Trips");
-        }
+
         public IActionResult CreateTrip()
         {
-            return View();
+           
+            TripViewModel tripViewModel = new TripViewModel()
+            {
+                DestinationOptions = new MultiSelectList(_repo.Destination.GetAllDestinations(),"DestinationId", "Name")
+            };
+            
+            return View(tripViewModel);
         }
         [HttpPost]
-        public IActionResult CreateTrip(Trip tripFromForm, Destination newDestination)
+        public IActionResult CreateTrip(TripViewModel viewModelFromForm)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Traveler travelerFromDB = _repo.Traveler.GetTravelerByUserId(userId);
-            _repo.Trip.CreateTrip(tripFromForm);
+            Traveler traveler = GetLoggedInTraveler();
+            List<Destination> usersSelectedDestinations = ReturnSelectionAsDestinationList(viewModelFromForm.selectedDestinations).ToList();
+            CreateNewDestinations(usersSelectedDestinations);
+            _repo.Trip.CreateTrip(viewModelFromForm.Trip);
             _repo.Save();
-            _repo.UserProfile.CreateUserProfile(tripFromForm, travelerFromDB);
+            _repo.UserProfile.CreateUserProfile(viewModelFromForm.Trip, traveler);
+            viewModelFromForm.Trip.Destinations = usersSelectedDestinations;
+            _repo.Trip.Update(viewModelFromForm.Trip);
             _repo.Save();
-            return RedirectToAction("Trips"); 
+            return RedirectToAction("Trips", traveler.TravelerId); 
         }
         public IActionResult Trips(int travelerId)
         {
@@ -110,23 +105,23 @@ namespace JungleBook.Controllers
             //{
             //    RedirectToAction("CreateTrip");
             //}
-
             return View(trips);
         }
         public IActionResult TripDetails(int id)
         {
-            var tripFromDb = _repo.Trip.GetTripById(id);
+            Trip tripFromDb = _repo.Trip.GetTripById(id);
+            tripFromDb.Destinations = _repo.Destination.GetDestinationsByTripId(id).ToList();
             return View(tripFromDb);
         }
-        public IActionResult PlanTrip(int id)
+        public IActionResult PlanTrip(int tripId)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
             TripViewModel tripViewModel = new TripViewModel()
             {
                 TravelerLoggedIn = traveler,
-                TravelBuddies = _repo.UserProfile.GetAllTravelersByTrip(id),
-                UserProfile = _repo.UserProfile.GetUserProfileByIds(traveler.TravelerId, id)
+                TravelBuddies = _repo.UserProfile.GetAllTravelersByTrip(tripId),
+                UserProfile = _repo.UserProfile.GetUserProfileByIds(traveler.TravelerId, tripId)
             };
             tripViewModel.DayActivities = _repo.DayActivity.GetActivitiesByDay(tripViewModel.UserProfile.Trip.Destinations);
             return View(tripViewModel);
@@ -156,32 +151,85 @@ namespace JungleBook.Controllers
             JObject events = await _searchRequest.Search(location, eventKeyword);
             return PartialView(events);
         }
-        private string ConvertCityStateCountryToUrl(Address address)
-        {
-            string city = address.City.Replace(' ', '+');
-            string state = address.State.Replace(' ', '+');
-            string country = address.Country.Replace(' ', '+');
-            string htmlCall = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-            string url = $"{htmlCall},+{city},+{state},{country}{API_Keys.GoogleServicesKey}";
+        private string ConvertAddressToUrl(Address address)
+        {   
+            string url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+            if (address.City != null)
+            {
+                string city = address.City.Replace(' ', '+');
+                url += city; 
+            }
+            if (address.State != null)
+            {
+                string state = address.State.Replace(' ', '+');
+                url += "," + state;
+            }
+            if (address.Country!= null)
+            {
+                string country = address.Country.Replace(' ', '+');
+                url += "," + country;
+            }
+            url += API_Keys.GoogleServicesKey;
             return url;
         }
         private double GetLatitude(JObject resultsFromGoogleServiceCall)
         {
-            return Double.Parse(resultsFromGoogleServiceCall.SelectToken("results.geometry.location.lat").ToString());
+            return Double.Parse(resultsFromGoogleServiceCall["results"][0]["geometry"]["location"]["lat"].ToString());
         }
         private double GetLongitude(JObject resultsFromGoogleServiceCall)
         {
-            return Double.Parse(resultsFromGoogleServiceCall.SelectToken("results.geometry.location.lng").ToString());
+            return Double.Parse(resultsFromGoogleServiceCall["results"][0]["geometry"]["location"]["lng"].ToString());
         }
         private string GetPlaceId(JObject resultsFromGoogleServiceCall)
         {
-            return resultsFromGoogleServiceCall.SelectToken("results.place_id").ToString();
+            return resultsFromGoogleServiceCall["results"][0]["place_id"].ToString();
         }
         private void SetLatLongAndPlaceId(Destination destination, JObject resultsFromGoogle)
         {
             destination.Address.Longitude = GetLongitude(resultsFromGoogle);
             destination.Address.Latitude = GetLatitude(resultsFromGoogle);
             destination.PlaceId = GetPlaceId(resultsFromGoogle);
+        }
+        private Traveler GetLoggedInTraveler()
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return _repo.Traveler.GetTravelerByUserId(userId);
+        }
+        
+        private ICollection<Destination> ReturnSelectionAsDestinationList (ICollection<int> selectedDestination)
+        {
+            List<Destination> destinationList = new List<Destination>();
+            List<Destination> destinationsFromDb = _repo.Destination.GetAllDestinations();
+            foreach (int selection in selectedDestination)
+            {
+                destinationList.Add(destinationsFromDb.Find(d => d.DestinationId == selection));
+            }
+            return destinationList;
+        }
+        private void AssignProperties(Destination newDestination, string url, JObject googleService)
+        {
+            url = ConvertAddressToUrl(newDestination.Address);
+            JObject resultsFromGoogle = _googleServices.GetDestinationInformation(url).Result;
+            SetLatLongAndPlaceId(newDestination, resultsFromGoogle);
+        }
+
+        //TO-DO Add state, country, placeId
+        private void CreateNewDestinations(ICollection<Destination> destinations)
+        {
+            JObject resultsFromGoogle = new JObject();
+            string url ="";
+            foreach(Destination destination in destinations)
+            {
+                if(_repo.Destination.DestinationExists(destination) == false)
+                {
+                    AssignProperties(destination, url, resultsFromGoogle);
+                    _repo.Address.CreateAddress(destination.Address);
+                    _repo.Save();
+                    destination.AddressId = destination.Address.AddressId;
+                    _repo.Destination.CreateDestination(destination);
+                }
+            }
+            _repo.Save();
         }
     }
 }
