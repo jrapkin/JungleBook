@@ -8,15 +8,38 @@
 <h1>PlanTrip</h1>
 
 <div>
-    <h4>TripViewModel</h4>
+    <h4>Plan Your Trip!</h4>
     <hr />
     <dl class="row">
     </dl>
 </div>
-<div id="eventsList">
-    
+<div id="PlanTripButtons" class="col-auto">
+    <p>
+        <button class="btn btn-primary" data-toggle="collapse" data-target=".multi-collapse" role="button" aria-expanded="false" aria-controls="EmailWindow Test">Open All Tabs</button>
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#SearchEvents" role="button" aria-expanded="false" aria-controls="EmailWindow">Look Up Events</button>
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#EmailWindow" role="button" aria-expanded="false" aria-controls="EmailWindow">Invite Others To Your Trip!</button>
+    </p>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="collapse multi-collapse" id="SearchEvents">
+            <div class="card card-body" id="eventsPartial">
+                @await Html.PartialAsync("~/Views/Travelers/_ShowEvents.cshtml", Model)
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+            <div class="multi-collapse collapse" id="EmailWindow">
+                <div class="card card-body" id="emailPartial">
+                    @await Html.PartialAsync("~/Views/Travelers/_TripInvitationPartial.cshtml", Model)
+                </div>
+            </div>
+    </div>
+
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Home</a>
 </div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>

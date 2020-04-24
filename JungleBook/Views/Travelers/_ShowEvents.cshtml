@@ -1,0 +1,65 @@
+﻿@model JungleBook.Models.ViewModels.TripViewModel
+
+@{
+    ViewData["Title"] = "ShowEvents";
+}
+
+
+<div class="container-fluid">
+    <h5>Search For Events</h5>
+        <p>
+            <button class="btn-sm btn-primary" data-toggle="collapse" data-target="#searchForm" role="button" aria-expanded="true" aria-controls="searchForm">Toggle Search</button>
+       </p>
+    <div class="row">
+        <div class="col-md-auto">
+            <div class="collapse" id="searchForm">
+                <form asp-action="ShowEvents" asp-controller="Travelers" >
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Trip.TripId" />
+                    @Html.HiddenFor(m => m.Trip)
+                    @Html.HiddenFor(m => m.DayActivities)
+                    @Html.HiddenFor(m => m.Message)
+                    <div class="form-group">
+                        <label asp-for="Keyword" class="control-label"></label>
+                        <input asp-for="Keyword" class="form-control" />
+                        <span asp-validation-for="Keyword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Location" class="control-label"></label>
+                        <textarea asp-for="Location" class="form-control"></textarea>
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Search" class="btn btn-primary" id="searchButton" onclick="getEvents()" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @if (Model.SearchResults != null)
+    {
+        <div class="container">
+            <div class="col">
+                <div class="card-columns">
+                    @foreach (Event item in Model.SearchResults.events.Event)
+                    {
+                        <div class="card">
+                            @if (item.image != null)
+                            {
+                                @if (item.image.url != null)
+                                {
+                                    <img class="card-img-top" src="@item.image.medium.url" >
+                                }
+                            }
+                            <div class="card-body">
+                                <h4 class="card-title">@item.title</h4>
+                                <p class="card-text">@item.description</p>
+                                <a href="@item.venue_url" class="btn btn-primary">Go To Event Page</a>
+                            </div>
+                        </div>
+                     }
+                </div>
+            </div>
+        </div>
+    }
+</div>
