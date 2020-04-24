@@ -12,7 +12,7 @@ namespace JungleBook.Services
 {
 	public class Eventful : ISearchRequest
 	{
-		public async Task<JObject> Search(string location, string eventKeyword)
+		public async Task<EventSearchResult> Search(string location, string eventKeyword)
 		{
 			string url = $"http://api.eventful.com/json/events/search?...&keywords={eventKeyword}&location={location}&date=Future&app_key={API_Keys.EventfulAppKey}";
 			using HttpClient client = new HttpClient();
@@ -21,11 +21,12 @@ namespace JungleBook.Services
 				if (response.IsSuccessStatusCode)
 				{
 					string json = await response.Content.ReadAsStringAsync();
-					JObject events = JsonConvert.DeserializeObject<JObject>(json);
+					EventSearchResult events = JsonConvert.DeserializeObject<EventSearchResult>(json);
 					return events;
 				}
 			}
 			return null;
 		}
+
 	}
 }
