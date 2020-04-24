@@ -32,6 +32,10 @@ namespace JungleBook.Data
 		{
 			return FindByCondition(ot => ot.TripId == tripId).Select(ot => ot.Traveler).ToList();
 		}
+		public Task<List<Traveler>> GetAllTravelersByTripAsync(int tripId)
+		{
+			return FindByCondition(ot => ot.TripId == tripId).Select(ot => ot.Traveler).ToListAsync();
+		}
 		public UserProfile GetUserProfileByIds(int travelerId, int tripId)
 		{
 			return FindByCondition(t => t.TravelerId == travelerId && t.TripId == tripId)
@@ -40,6 +44,15 @@ namespace JungleBook.Data
 				.ThenInclude(d => d.Days)
 				.ThenInclude(da => da.DayActivities)
 				.FirstOrDefault();
+		}
+		public Task<UserProfile> GetUserProfileByIdsAsync(int travelerId, int tripId)
+		{
+			return FindByCondition(t => t.TravelerId == travelerId && t.TripId == tripId)
+				.Include(t => t.Trip)
+				.ThenInclude(d => d.Destinations)
+				.ThenInclude(d => d.Days)
+				.ThenInclude(da => da.DayActivities)
+				.FirstOrDefaultAsync();
 		}
 		public async Task<UserProfile> GetUserProfileByInviteCode(string username, string tripName)
 		{

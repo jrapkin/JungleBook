@@ -9,6 +9,6 @@ namespace JungleBook.Contracts
 {
 	public interface ISearchRequest
 	{
-		Task<JObject> Search(string location, string keyword);
+		Task<EventSearchResult> Search(string location, string keyword);
 	}
 }
