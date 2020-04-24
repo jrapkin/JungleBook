@@ -1,5 +1,3 @@
-using System;
-
 namespace JungleBook.Models
 {
 	public class ErrorViewModel

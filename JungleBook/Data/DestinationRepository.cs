@@ -18,7 +18,7 @@ namespace JungleBook.Data
 		}
 		public List<Destination> GetAllDestinations()
 		{
-			return FindAll().Include(a=>a.Address).ToList();
+			return FindAll().Include(a => a.Address).ToList();
 		}
 		public void CreateDestination(Destination destination)
 		{
@@ -26,7 +26,7 @@ namespace JungleBook.Data
 		}
 		public bool DestinationExists(Destination destination)
 		{
-			if(FindByCondition(d => d.Name == destination.Name).Any())
+			if (FindByCondition(d => d.Name == destination.Name).Any())
 			{
 				return true;
 			}

@@ -1,9 +1,5 @@
 ﻿using JungleBook.Contracts;
 using JungleBook.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace JungleBook
 {
@@ -93,7 +89,7 @@ namespace JungleBook
 		{
 			get
 			{
-				if (_traveler ==null)
+				if (_traveler == null)
 				{
 					_traveler = new TravelerRepository(_context);
 				}
@@ -115,7 +111,7 @@ namespace JungleBook
 		{
 			get
 			{
-				if(_userProfile ==null)
+				if (_userProfile == null)
 				{
 					_userProfile = new UserProfileRepository(_context);
 				}

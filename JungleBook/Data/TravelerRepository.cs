@@ -14,7 +14,7 @@ namespace JungleBook.Data
 		public void CreateTraveler(Traveler traveler) => Create(traveler);
 		public ICollection<Traveler> GetTravelBuddiesByTripId(int tripId)
 		{
-			return FindAll().Where(t => t.UserProfiles.Any(up => up.TripId ==tripId)).ToList();
+			return FindAll().Where(t => t.UserProfiles.Any(up => up.TripId == tripId)).ToList();
 		}
 		public Traveler GetTravelerByUserId(string userId)
 		{

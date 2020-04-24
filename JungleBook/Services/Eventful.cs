@@ -1,12 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Net.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using JungleBook.Contracts;
 using JungleBook.Models;
-using JungleBook.Contracts;
-using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace JungleBook.Services
 {

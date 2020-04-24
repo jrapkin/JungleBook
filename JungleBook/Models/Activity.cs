@@ -8,7 +8,7 @@ namespace JungleBook.Models
 		public int? ActivityId { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
-		[ForeignKey ("Address")]
+		[ForeignKey("Address")]
 		public int AddressId { get; set; }
 		public Address Address { get; set; }
 		public List<DayActivity> DayActivities { get; set; }

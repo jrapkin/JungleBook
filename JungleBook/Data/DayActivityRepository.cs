@@ -1,10 +1,6 @@
 ﻿using JungleBook.Contracts;
 using JungleBook.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace JungleBook.Data
 {
@@ -19,7 +15,7 @@ namespace JungleBook.Data
 			List<DayActivity> filteredActivities = new List<DayActivity>();
 			foreach (var destination in destinations)
 			{
-				foreach( var day in destination.Days)
+				foreach (var day in destination.Days)
 				{
 					filteredActivities.AddRange(filteredActivities.FindAll(d => d.DayId == day.DayId));
 				}

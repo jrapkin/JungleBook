@@ -6,7 +6,7 @@ namespace JungleBook.Data
 	public class DayRepository : RepositoryBase<Day>, IDayRepository
 	{
 		public DayRepository(ApplicationDbContext applicationDbContext)
-			:base(applicationDbContext)
+			: base(applicationDbContext)
 		{
 
 		}

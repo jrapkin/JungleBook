@@ -6,7 +6,7 @@ namespace JungleBook.Models
 	{
 		public int AccommodationId { get; set; }
 		public string Name { get; set; }
-		[ForeignKey ("Address")]
+		[ForeignKey("Address")]
 		public int AddressId { get; set; }
 		public Address Address { get; set; }
 	}

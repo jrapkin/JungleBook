@@ -1,10 +1,7 @@
 ﻿using JungleBook.Models.ViewModels;
 using MailKit.Net.Smtp;
 using MimeKit;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace JungleBook.Services
 {
@@ -14,7 +11,7 @@ namespace JungleBook.Services
 		{
 			MailboxAddress senderAddress = new MailboxAddress("", from);
 			List<MailboxAddress> recipientAddresses = new List<MailboxAddress>();
-			foreach(string address in listOfRecipients)
+			foreach (string address in listOfRecipients)
 			{
 				recipientAddresses.Add(new MailboxAddress("", address));
 			}

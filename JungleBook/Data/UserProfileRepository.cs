@@ -1,8 +1,8 @@
-﻿using JungleBook.Models;
-using JungleBook.Contracts;
+﻿using JungleBook.Contracts;
+using JungleBook.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace JungleBook.Data
@@ -16,9 +16,9 @@ namespace JungleBook.Data
 		public void CreateUserProfile(Trip trip, Traveler traveler)
 		{
 			UserProfile userProfile = new UserProfile()
-			{ 
-				TripId = trip.TripId, 
-				TravelerId = traveler.TravelerId 
+			{
+				TripId = trip.TripId,
+				TravelerId = traveler.TravelerId
 			};
 			Create(userProfile);
 		}
@@ -30,7 +30,7 @@ namespace JungleBook.Data
 		}
 		public List<Destination> GetAllDestinationsByTravelerId(int travelerId)
 		{
-			return FindByCondition(t => t.TravelerId == travelerId).Include(t => t.Trip).ThenInclude(a=> a.Destinations).ThenInclude(d=> d.Address).Select(d=>d.Trip.Destinations).FirstOrDefault();
+			return FindByCondition(t => t.TravelerId == travelerId).Include(t => t.Trip).ThenInclude(a => a.Destinations).ThenInclude(d => d.Address).Select(d => d.Trip.Destinations).FirstOrDefault();
 		}
 		public List<Traveler> GetAllTravelersByTrip(int tripId)
 		{

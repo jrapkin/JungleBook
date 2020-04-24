@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace JungleBook.Models.ViewModels
 {
@@ -10,6 +7,6 @@ namespace JungleBook.Models.ViewModels
 		Trip Trips { get; set; }
 		public List<Destination> VisitedDestinations { get; set; }
 		public List<Destination> FutureDestinations { get; set; }
-		
+
 	}
 }

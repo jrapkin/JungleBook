@@ -1,18 +1,17 @@
-﻿using System;
+﻿using JungleBook.Contracts;
+using JungleBook.Models;
+using JungleBook.Models.ViewModels;
+using JungleBook.Services;
+using JungleBook.Util;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using MimeKit;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using JungleBook.Contracts;
-using JungleBook.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using JungleBook.Models.ViewModels;
-using MimeKit;
-using JungleBook.Services;
-using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using JungleBook.Util;
 
 namespace JungleBook.Controllers
 {
@@ -104,11 +103,6 @@ namespace JungleBook.Controllers
             {
                 return View(trips);
             }
-            //If deciding to go single page app- redirect to create trip
-            //else
-            //{
-            //    RedirectToAction("CreateTrip");
-            //}
             return View(trips);
         }
         public IActionResult TripDetails(int id)
@@ -117,20 +111,11 @@ namespace JungleBook.Controllers
             {
                 Trip = _repo.Trip.GetTripById(id)
             };
-           detailsViewModel.Trip.Destinations =_repo.Destination.GetDestinationsByTripId(id).ToList();
-           detailsViewModel.Message = RecommendTripDateBasedOnWeather(detailsViewModel.Trip.Destinations.First()).Result;
-            
+            detailsViewModel.Trip.Destinations = _repo.Destination.GetDestinationsByTripId(id).ToList();
+            detailsViewModel.Message = RecommendTripDateBasedOnWeather(detailsViewModel.Trip.Destinations.First()).Result;
+
             return View(detailsViewModel);
         }
-        //public IActionResult EmailInvitationPartialView()
-        //{
-        //    Traveler traveler = GetLoggedInTraveler();
-        //    Message message = new Message()
-        //    {
-        //        SenderAddress = traveler.Email,
-        //    };
-        //    return ViewComponent("EmailInvitationViewComponent", message);
-        //}
         [HttpPost]
         public IActionResult SendInvitations(TripViewModel modelFromForm)
         {
@@ -142,11 +127,10 @@ namespace JungleBook.Controllers
             EmailInvitation.SendEmailInvitation(email, API_Keys.EmailAddress, API_Keys.EmailPassword);
             return RedirectToAction("PlanTrip", new { id = modelFromForm.Trip.TripId });
         }
-
         [HttpGet]
         public async Task<IActionResult> PlanTrip(TripViewModel viewModelFromEventsSearch, int id)
         {
-            
+
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
             TripViewModel tripViewModel = new TripViewModel()
@@ -187,7 +171,7 @@ namespace JungleBook.Controllers
         [HttpPost]
         public async Task<PartialViewResult> SelectInterests(TripViewModel modelFromView)
         {
-            
+
             List<Destination> destinations = _repo.Destination.GetDestinationsByTripId(modelFromView.Trip.TripId).ToList();
             List<Address> addressesToCall = GetAddressesForLocationSearch(destinations);
 
@@ -200,8 +184,8 @@ namespace JungleBook.Controllers
                 case "hiking":
                 case "camping":
                 case "outdoors":
-                modelFromView.HikingResult = await _hikingService.SearchForHikingSpots(addressesToCall.FirstOrDefault().Latitude.ToString(),
-                        addressesToCall.FirstOrDefault().Longitude.ToString());
+                    modelFromView.HikingResult = await _hikingService.SearchForHikingSpots(addressesToCall.FirstOrDefault().Latitude.ToString(),
+                            addressesToCall.FirstOrDefault().Longitude.ToString());
                     break;
             }
             return PartialView("PlanTrip", modelFromView);
@@ -221,7 +205,7 @@ namespace JungleBook.Controllers
 
         private List<Address> GetAddressesForLocationSearch(List<Destination> destinations)
         {
-            List <Address> addressesForSearch = new List<Address>();
+            List<Address> addressesForSearch = new List<Address>();
             foreach (Destination item in destinations)
             {
                 addressesForSearch.Add(item.Address);
@@ -253,19 +237,19 @@ namespace JungleBook.Controllers
             return futureDestinations;
         }
         private string ConvertAddressToGoogleUrl(Address address)
-        {   
+        {
             string url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
             if (address.City != null)
             {
                 string city = address.City.Replace(' ', '+');
-                url += city; 
+                url += city;
             }
             if (address.State != null)
             {
                 string state = address.State.Replace(' ', '+');
                 url += "," + state;
             }
-            if (address.Country!= null)
+            if (address.Country != null)
             {
                 string country = address.Country.Replace(' ', '+');
                 url += "," + country;
@@ -296,8 +280,8 @@ namespace JungleBook.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             return _repo.Traveler.GetTravelerByUserId(userId);
         }
-        
-        private ICollection<Destination> ReturnSelectionAsDestinationList (ICollection<int> selectedDestination)
+
+        private ICollection<Destination> ReturnSelectionAsDestinationList(ICollection<int> selectedDestination)
         {
             List<Destination> destinationList = new List<Destination>();
             List<Destination> destinationsFromDb = _repo.Destination.GetAllDestinations();
@@ -314,14 +298,14 @@ namespace JungleBook.Controllers
             SetLatLongAndPlaceId(newDestination, resultsFromGoogle);
         }
 
-        //TO-DO Add state, country, placeId
+        //TO-DO
         private void CreateNewDestinations(ICollection<Destination> destinations)
         {
             JObject resultsFromGoogle = new JObject();
-            string url ="";
-            foreach(Destination destination in destinations)
+            string url = "";
+            foreach (Destination destination in destinations)
             {
-                if(_repo.Destination.DestinationExists(destination) == false)
+                if (_repo.Destination.DestinationExists(destination) == false)
                 {
                     AssignProperties(destination, url, resultsFromGoogle);
                     _repo.Address.CreateAddress(destination.Address);
@@ -335,9 +319,9 @@ namespace JungleBook.Controllers
         private string ConvertAddressToWeatherUrl(Address address)
         {
 
-                string city = address.City.Replace(' ', '+');
+            string city = address.City.Replace(' ', '+');
 
-                string country = address.Country.Replace(' ', '+');
+            string country = address.Country.Replace(' ', '+');
 
             string url = $"https://api.worldweatheronline.com/premium/v1/past-weather.ashx?q={city},{country}&date=2018-07-20&enddate=2019-07-20&key={API_Keys.WorldWeather}&format=json";
             return url;
@@ -351,7 +335,7 @@ namespace JungleBook.Controllers
 
             foreach (var item in weatherHistory.data.weather)
             {
-                if(double.Parse(item.mintempF) > 50 && double.Parse(item.maxtempF) <90)
+                if (double.Parse(item.mintempF) > 50 && double.Parse(item.maxtempF) < 90)
                 {
 
                     positiveScores.Add(int.Parse(item.mintempF));
@@ -361,7 +345,7 @@ namespace JungleBook.Controllers
                     continue;
                 }
             }
-            if( positiveScores.Count > 500)
+            if (positiveScores.Count > 500)
             {
                 recommendation = "Go during their summer months";
             }

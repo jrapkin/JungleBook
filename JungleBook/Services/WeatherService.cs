@@ -2,9 +2,6 @@
 using JungleBook.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -12,16 +9,6 @@ namespace JungleBook.Services
 {
     public class WeatherService : IWeatherRequest
     {
-        //public string ConvertToUrl(string city, string state, string country, DateTime date)
-        //{
-        //    city = city.Replace(' ', '+');
-        //    country = country.Replace(' ', '+');
-        //    if (date == DateTime.Today)
-        //    {
-        //        string url = $"https://api.worldweatheronline.com/premium/v1/weather.ashx?q={city},{state},{country}ie&date=today&key={API_Keys.WorldWeather}&format=json";
-        //    }
-        //    string dateAsString = date.ToString()
-        //}
         public async Task<JObject> GetCurrentWeather(string city, string state, string country)
         {
             string url = $"https://api.worldweatheronline.com/premium/v1/weather.ashx?q={city},{state},{country}ie&date=today&key={API_Keys.WorldWeather}&format=json";
