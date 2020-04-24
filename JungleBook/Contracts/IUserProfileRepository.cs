@@ -15,5 +15,6 @@ namespace JungleBook.Contracts
 		UserProfile GetUserProfileByIds(int travelerId, int tripId);
 		Task<UserProfile> GetUserProfileByIdsAsync(int travelerId, int tripId);
 		Task<UserProfile> GetUserProfileByInviteCode(string username, string tripName);
+		List<Destination> GetAllDestinationsByTravelerId(int travelerId);
 	}
 }

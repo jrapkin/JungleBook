@@ -5,12 +5,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <h1>Trips</h1>
 @if (Model.Any() == false)
 {
-<p>
-    <a asp-action="CreateTrip">Start Planning A Trip</a>
-</p>
+    <p>
+        <a asp-action="CreateTrip">Start Planning A Trip</a>
+    </p>
 }
 <table class="table">
     <thead>
@@ -28,26 +29,26 @@
         </tr>
     </thead>
     <tbody>
-@if (Model.Any())
-{
-    @foreach (var item in Model)
-    {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EstimatedCost)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
-                </td>
-                <td>
-                    <a asp-action="PlanTrip" asp-route-id="@item.TripId">Plan Trip</a> |
-                    @Html.ActionLink("View Trip Details", "TripDetails", new { id = item.TripId }) |
-                </td>
-            </tr>
-    }
-}
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EstimatedCost)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        <a asp-action="PlanTrip" asp-route-id="@item.TripId">Plan Trip</a> |
+                        @Html.ActionLink("View Trip Details", "TripDetails", new { id = item.TripId }) |
+                    </td>
+                </tr>
+            }
+        }
     </tbody>
 </table>

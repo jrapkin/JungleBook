@@ -1,0 +1,33 @@
+﻿@model JungleBook.Models.ViewModels.MapViewModel
+
+<body>
+    <div id="map" style="width: 800px; height: 700px;"></div>
+    <script type="text/javascript">
+        function initMap() {
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 3,
+                center: new google.maps.LatLng(43.0343, -87.9115)
+            });
+       
+        var visitedDestinations = @Html.Raw(Json.Serialize(Model.VisitedDestinations.Select(a => new double[]{a.Address.Latitude.GetValueOrDefault(), a.Address.Longitude.GetValueOrDefault()}).ToArray()));
+        var futureDestinations = @Html.Raw(Json.Serialize(Model.FutureDestinations.Select(a => new double[]{a.Address.Latitude.GetValueOrDefault(), a.Address.Longitude.GetValueOrDefault()}).ToArray()));
+        for (var i = 0; i < visitedDestinations.length; i++) {
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(visitedDestinations[i][0], visitedDestinations[i][1]),
+                map: map
+            });
+        }
+        for (var i = 0; i < futureDestinations.length; i++) {
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(futureDestinations[i][0], futureDestinations[i][1]),
+                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                map: map
+            });
+        }
+    }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@API_Keys.GoogleMapsKey&libraries=drawing&callback=initMap"></script>
+</body>

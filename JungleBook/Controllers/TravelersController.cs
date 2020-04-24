@@ -171,7 +171,43 @@ namespace JungleBook.Controllers
 
             return PartialView("PlanTrip", modelFromView);
         }
+        public IActionResult ViewMap()
+        {
+            Traveler traveler = GetLoggedInTraveler();
 
+            List<Destination> destinations = _repo.UserProfile.GetAllDestinationsByTravelerId(traveler.TravelerId).ToList();
+            MapViewModel mapViewModel = new MapViewModel()
+            {
+                VisitedDestinations = CheckIfAlreadyVisited(destinations),
+                FutureDestinations = FilterFutureDestinations(destinations)
+            };
+            return View(mapViewModel);
+        }
+
+        private List<Destination> CheckIfAlreadyVisited(List<Destination> destinations)
+        {
+            List<Destination> visitedDestinations = new List<Destination>();
+            foreach (Destination destination in destinations)
+            {
+                if (destination.DepartureDate.Date < DateTime.Today)
+                {
+                    visitedDestinations.Add(destination);
+                }
+            }
+            return visitedDestinations;
+        }
+        private List<Destination> FilterFutureDestinations(List<Destination> destinations)
+        {
+            List<Destination> futureDestinations = new List<Destination>();
+            foreach (Destination destination in destinations)
+            {
+                if (destination.ArrivalDate.Date > DateTime.Today)
+                {
+                    futureDestinations.Add(destination);
+                }
+            }
+            return futureDestinations;
+        }
         private string ConvertAddressToUrl(Address address)
         {   
             string url = "https://maps.googleapis.com/maps/api/geocode/json?address=";

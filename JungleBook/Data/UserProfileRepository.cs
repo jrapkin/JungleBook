@@ -28,6 +28,10 @@ namespace JungleBook.Data
 				.Include(t => t.Trip)
 				.Select(t => t.Trip).ToList();
 		}
+		public List<Destination> GetAllDestinationsByTravelerId(int travelerId)
+		{
+			return FindByCondition(t => t.TravelerId == travelerId).Include(t => t.Trip).ThenInclude(a=> a.Destinations).ThenInclude(d=> d.Address).Select(d=>d.Trip.Destinations).FirstOrDefault();
+		}
 		public List<Traveler> GetAllTravelersByTrip(int tripId)
 		{
 			return FindByCondition(ot => ot.TripId == tripId).Select(ot => ot.Traveler).ToList();
