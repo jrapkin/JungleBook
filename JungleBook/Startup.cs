@@ -16,6 +16,8 @@ using JungleBook.Models;
 using JungleBook.Contracts;
 using Newtonsoft.Json.Linq;
 using JungleBook.Services;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace JungleBook
 {
@@ -38,9 +40,13 @@ namespace JungleBook
 			services.AddScoped<IWeatherRequest, Weather>();
 			services.AddScoped<ISearchRequest, Eventful>();
 			services.AddScoped<IGoogleServices, GoogleServices>();
+			services.AddScoped<IHikingProject, HikingProject>();
 			services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
 				.AddEntityFrameworkStores<ApplicationDbContext>()
-				.AddDefaultUI();
+				.AddDefaultUI()
+				.AddDefaultTokenProviders();
+			services.AddScoped<ClaimsPrincipal>(s => s.GetService<IHttpContextAccessor>().HttpContext.User);
+
 			services.AddControllersWithViews();
 			services.AddRazorPages();
 		}

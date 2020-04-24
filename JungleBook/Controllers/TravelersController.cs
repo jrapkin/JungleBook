@@ -12,6 +12,7 @@ using MimeKit;
 using JungleBook.Services;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using JungleBook.Util;
 
 namespace JungleBook.Controllers
 {
@@ -20,11 +21,13 @@ namespace JungleBook.Controllers
         private IRepositoryWrapper _repo;
         private ISearchRequest _searchRequest;
         private IGoogleServices _googleServices;
-        public TravelersController(IRepositoryWrapper repo, ISearchRequest searchRequest, IGoogleServices googleServices)
+        private IHikingProject _hikingService;
+        public TravelersController(IRepositoryWrapper repo, ISearchRequest searchRequest, IGoogleServices googleServices, IHikingProject hikingService)
         {
             _repo = repo;
             _searchRequest = searchRequest;
             _googleServices = googleServices;
+            _hikingService = hikingService;
 
         }
         public IActionResult Index()
@@ -34,7 +37,7 @@ namespace JungleBook.Controllers
 
             if (_repo.Traveler.FindByCondition(t => t.ApplicationUserId == userId).Any())
             {
-               //do stuff
+                //do stuff
             }
             else
             {
@@ -48,11 +51,11 @@ namespace JungleBook.Controllers
             TripViewModel tripViewModel;
             if (trip.TripId == default)
             {
-                 tripViewModel = new TripViewModel()
+                tripViewModel = new TripViewModel()
                 {
                     DestinationOptions = new MultiSelectList(_repo.Destination.GetAllDestinations(), "DestinationId", "Name")
                 };
-                return View("CreateTrip",tripViewModel);
+                return View("CreateTrip", tripViewModel);
             }
             tripViewModel = new TripViewModel()
             {
@@ -61,7 +64,7 @@ namespace JungleBook.Controllers
                 TravelBuddies = _repo.Traveler.GetTravelBuddiesByTripId(trip.TripId).ToList(),
                 DestinationOptions = new MultiSelectList(_repo.Destination.GetDestinationsByTripId(trip.TripId), "DestinationId", "Name")
             };
-            
+
             return View("CreateTrip", tripViewModel);
         }
         [HttpPost]
@@ -69,7 +72,7 @@ namespace JungleBook.Controllers
         {
             Traveler traveler = GetLoggedInTraveler();
             List<Destination> usersSelectedDestinations = ReturnSelectionAsDestinationList(viewModelFromForm.selectedDestinations).ToList();
-            if(_repo.Trip.FindByCondition(t=>t.TripId == viewModelFromForm.Trip.TripId).Any() == false)
+            if (_repo.Trip.FindByCondition(t => t.TripId == viewModelFromForm.Trip.TripId).Any() == false)
             {
                 CreateNewDestinations(usersSelectedDestinations);
                 _repo.Trip.CreateTrip(viewModelFromForm.Trip);
@@ -79,7 +82,7 @@ namespace JungleBook.Controllers
             viewModelFromForm.Trip.Destinations = usersSelectedDestinations;
             _repo.Trip.Update(viewModelFromForm.Trip);
             _repo.Save();
-            return RedirectToAction("Trips"); 
+            return RedirectToAction("Trips");
         }
         [HttpPost]
         public async Task<IActionResult> AddInvitedTraveler(string userName, string tripName)
@@ -93,9 +96,9 @@ namespace JungleBook.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
-            
+
             List<Trip> trips = _repo.UserProfile.GetAllTripsByTraveler(traveler.TravelerId).ToList();
-            if(trips.Any())
+            if (trips.Any())
             {
                 return View(trips);
             }
@@ -136,6 +139,7 @@ namespace JungleBook.Controllers
         [HttpGet]
         public async Task<IActionResult> PlanTrip(TripViewModel viewModelFromEventsSearch, int id)
         {
+            
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
             TripViewModel tripViewModel = new TripViewModel()
@@ -149,18 +153,20 @@ namespace JungleBook.Controllers
                     SenderAddress = traveler.Email
                 }
             };
-            
-            if (viewModelFromEventsSearch.SearchResults != null )
+            if (viewModelFromEventsSearch.SearchResults != null)
             {
                 tripViewModel.SearchResults = viewModelFromEventsSearch.SearchResults;
             }
-            //tripViewModel.Trip.Destinations = _repo.Destination.GetDestinationsByTripId(tripId).ToList();
-            //if (_repo.DayActivity.FindByCondition(da => da.Day == tripViewModel.Trip.Destinations.Where(d => d.Days.Distinct() == da.Day)).Any())
-            //{
-            //    tripViewModel.DayActivities = _repo.DayActivity.FindAll().ToList();
-            //};
-            //tripViewModel.DayActivities = _repo.DayActivity.GetActivitiesByDay(tripViewModel.UserProfile.Trip.Destinations);
-            return  View(tripViewModel);
+            if (viewModelFromEventsSearch.CampingResults != null)
+            {
+                tripViewModel.CampingResults = viewModelFromEventsSearch.CampingResults;
+            }
+            if (viewModelFromEventsSearch.PlaceResults != null)
+            {
+                tripViewModel.PlaceResults = viewModelFromEventsSearch.PlaceResults;
+            }
+            tripViewModel.Interests = SelectListItemHelper.GetInterests().ToList();
+            return View(tripViewModel);
         }
 
         [HttpPost]
@@ -169,6 +175,28 @@ namespace JungleBook.Controllers
             EventSearchResult events = await _searchRequest.Search(location, keyword);
             modelFromView.SearchResults = events;
 
+            return PartialView("PlanTrip", modelFromView);
+        }
+        [HttpPost]
+        public async Task<PartialViewResult> SelectInterests(TripViewModel modelFromView)
+        {
+            
+            List<Destination> destinations = _repo.Destination.GetDestinationsByTripId(modelFromView.Trip.TripId).ToList();
+            List<Address> addressesToCall = GetAddressesForLocationSearch(destinations);
+
+            switch (modelFromView.SelectedInterest)
+            {
+                case "resturant":
+                    modelFromView.PlaceResults = await _googleServices.PlacesSearch(addressesToCall.FirstOrDefault().Latitude.ToString(),
+                        addressesToCall.FirstOrDefault().Longitude.ToString(), modelFromView.SelectedInterest);
+                    break;
+                case "hiking":
+                case "camping":
+                case "outdoors":
+                modelFromView.HikingResult = await _hikingService.SearchForHikingSpots(addressesToCall.FirstOrDefault().Latitude.ToString(),
+                        addressesToCall.FirstOrDefault().Longitude.ToString());
+                    break;
+            }
             return PartialView("PlanTrip", modelFromView);
         }
         public IActionResult ViewMap()
@@ -184,6 +212,15 @@ namespace JungleBook.Controllers
             return View(mapViewModel);
         }
 
+        private List<Address> GetAddressesForLocationSearch(List<Destination> destinations)
+        {
+            List <Address> addressesForSearch = new List<Address>();
+            foreach (Destination item in destinations)
+            {
+                addressesForSearch.Add(item.Address);
+            }
+            return addressesForSearch;
+        }
         private List<Destination> CheckIfAlreadyVisited(List<Destination> destinations)
         {
             List<Destination> visitedDestinations = new List<Destination>();

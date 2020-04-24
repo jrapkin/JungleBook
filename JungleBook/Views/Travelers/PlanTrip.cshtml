@@ -15,31 +15,37 @@
 </div>
 <div id="PlanTripButtons" class="col-auto">
     <p>
-        <button class="btn btn-primary" data-toggle="collapse" data-target=".multi-collapse" role="button" aria-expanded="false" aria-controls="EmailWindow Test">Open All Tabs</button>
+        <button class="btn btn-primary" data-toggle="collapse" data-target=".multi-collapse" role="button" aria-expanded="false" aria-controls="EmailWindow SearchEvents SelectInterests">Open All Tabs</button>
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#SelectInterests" role="button" aria-expanded="false" aria-controls="SelectInterests">Select Some Interests</button>
         <button class="btn btn-primary" data-toggle="collapse" data-target="#SearchEvents" role="button" aria-expanded="false" aria-controls="EmailWindow">Look Up Events</button>
         <button class="btn btn-primary" data-toggle="collapse" data-target="#EmailWindow" role="button" aria-expanded="false" aria-controls="EmailWindow">Invite Others To Your Trip!</button>
     </p>
 </div>
 <div class="row">
     <div class="col">
-        <div class="collapse multi-collapse" id="SearchEvents">
+        <div class="collapse multi-collapse" id="SelectInterests">
             <div class="card card-body" id="eventsPartial">
-                @await Html.PartialAsync("~/Views/Travelers/_ShowEvents.cshtml", Model)
+                @await Html.PartialAsync("~/Views/Travelers/_SelectInterests.cshtml", Model)
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <div class="collapse multi-collapse" id="SearchEvents">
+                <div class="card card-body" id="eventsPartial">
+                    @await Html.PartialAsync("~/Views/Travelers/_ShowEvents.cshtml", Model)
+                </div>
+            </div>
+        </div>
 
-    <div class="col">
+        <div class="col">
             <div class="multi-collapse collapse" id="EmailWindow">
                 <div class="card card-body" id="emailPartial">
                     @await Html.PartialAsync("~/Views/Travelers/_TripInvitationPartial.cshtml", Model)
                 </div>
             </div>
+        </div>
     </div>
+</div>
 
-</div>
-<div>
-    <a asp-action="Index">Home</a>
-</div>
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
+

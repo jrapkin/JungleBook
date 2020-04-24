@@ -14,7 +14,7 @@ namespace JungleBook.Data
 		}
 		public ICollection<Destination> GetDestinationsByTripId(int tripId)
 		{
-			return FindByCondition(d => d.Trip.TripId == tripId).ToList();
+			return FindByCondition(d => d.Trip.TripId == tripId).Include(a => a.Address).ToList();
 		}
 		public List<Destination> GetAllDestinations()
 		{

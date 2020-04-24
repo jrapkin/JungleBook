@@ -1,0 +1,101 @@
+﻿@model JungleBook.Models.ViewModels.TripViewModel
+
+@{
+    ViewData["Title"] = "ShowEvents";
+}
+
+
+<div class="container-fluid">
+<h5>Recommendations By Interests</h5>
+<h6> Enter some interests by type or keyword</h6>
+<p>
+    <button class="btn-sm btn-primary" data-toggle="collapse" data-target="#searchForm" role="button" aria-expanded="true" aria-controls="searchForm">Close Tab</button>
+</p>
+<div class="row">
+    <div class="col-md-auto">
+        <div class="collapse" id="searchForm">
+            <form asp-action="SelectInterests" asp-controller="Travelers">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Trip.TripId" />
+                <div class="form-group">
+                <label asp-for="Interests" class="control-label"></label>
+                <select asp-for="SelectedInterest" asp-items='Model.Interests' class="form-control"></select>
+                <span asp-validation-for="SelectedInterest" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="See whats out there" class="btn btn-primary" id="searchButton" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@if (Model.CampingResults != null)
+{
+    <div class="container">
+        <div class="col">
+            <div class="card-columns">
+                @foreach (Campground item in Model.CampingResults.campgrounds)
+                {
+                    <div class="card">
+                        @if (item.imgUrl != null)
+                        {
+                            <img class="card-img-top" src="@item.imgUrl">
+                        }
+                        <div class="card-body">
+                            <h4 class="card-title">@item.name</h4>
+                            <a href="@item.url" class="btn btn-primary">Check Their Page</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+@if (Model.HikingResult != null)
+{
+    <div class="container">
+        <div class="col">
+            <div class="card-columns">
+                @foreach (Trail item in Model.HikingResult.trails)
+                {
+                    <div class="card">
+                        @if (item.imgSmall != null)
+                        {
+                            <img class="card-img-top" src="@item.imgSmall">
+                        }
+                        <div class="card-body">
+                            <h4 class="card-title">@item.name</h4>
+                            <p class="card-text">@item.summary</p>
+                            <a href="@item.url" class="btn btn-primary">Check Their Page</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+@if (Model.PlaceResults != null)
+{
+    <div class="container">
+        <div class="col">
+            <div class="card-columns">
+                @foreach (Result item in Model.PlaceResults.results)
+                {
+                    <div class="card">
+                        @if (item.icon != null)
+                        {
+                            <img class="card-img-top" src="@item.icon">
+                        }
+                        <div class="card-body">
+                            <h4 class="card-title">@item.name</h4>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+
+</div>
