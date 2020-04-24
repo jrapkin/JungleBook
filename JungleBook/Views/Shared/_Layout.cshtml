@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav id="NavBar" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">JungleBook</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -23,13 +23,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Travelers" asp-action="Index">Index</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Travelers" asp-action="CreateTrip">Create Trip</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Travelers" asp-action="GetCreateTrip">Create Trip</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Travelers" asp-action="ViewMap">View Map</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Travelers" asp-action="Trip Details">Trips</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Travelers" asp-action="Trips">Trips</a>
                         </li>
                     </ul>
                 </div>

@@ -22,12 +22,14 @@ namespace JungleBook.Controllers
         private ISearchRequest _searchRequest;
         private IGoogleServices _googleServices;
         private IHikingProject _hikingService;
-        public TravelersController(IRepositoryWrapper repo, ISearchRequest searchRequest, IGoogleServices googleServices, IHikingProject hikingService)
+        private IWeatherRequest _weatherRequest;
+        public TravelersController(IRepositoryWrapper repo, IWeatherRequest weatherRequest, ISearchRequest searchRequest, IGoogleServices googleServices, IHikingProject hikingService)
         {
             _repo = repo;
             _searchRequest = searchRequest;
             _googleServices = googleServices;
             _hikingService = hikingService;
+            _weatherRequest = weatherRequest;
 
         }
         public IActionResult Index()
@@ -111,9 +113,14 @@ namespace JungleBook.Controllers
         }
         public IActionResult TripDetails(int id)
         {
-            Trip tripFromDb = _repo.Trip.GetTripById(id);
-            tripFromDb.Destinations = _repo.Destination.GetDestinationsByTripId(id).ToList();
-            return View(tripFromDb);
+            DetailsViewModel detailsViewModel = new DetailsViewModel()
+            {
+                Trip = _repo.Trip.GetTripById(id)
+            };
+           detailsViewModel.Trip.Destinations =_repo.Destination.GetDestinationsByTripId(id).ToList();
+           detailsViewModel.Message = RecommendTripDateBasedOnWeather(detailsViewModel.Trip.Destinations.First()).Result;
+            
+            return View(detailsViewModel);
         }
         //public IActionResult EmailInvitationPartialView()
         //{
@@ -245,7 +252,7 @@ namespace JungleBook.Controllers
             }
             return futureDestinations;
         }
-        private string ConvertAddressToUrl(Address address)
+        private string ConvertAddressToGoogleUrl(Address address)
         {   
             string url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
             if (address.City != null)
@@ -302,7 +309,7 @@ namespace JungleBook.Controllers
         }
         private void AssignProperties(Destination newDestination, string url, JObject googleService)
         {
-            url = ConvertAddressToUrl(newDestination.Address);
+            url = ConvertAddressToGoogleUrl(newDestination.Address);
             JObject resultsFromGoogle = _googleServices.GetDestinationInformation(url).Result;
             SetLatLongAndPlaceId(newDestination, resultsFromGoogle);
         }
@@ -324,6 +331,47 @@ namespace JungleBook.Controllers
                 }
             }
             _repo.Save();
+        }
+        private string ConvertAddressToWeatherUrl(Address address)
+        {
+
+                string city = address.City.Replace(' ', '+');
+
+                string country = address.Country.Replace(' ', '+');
+
+            string url = $"https://api.worldweatheronline.com/premium/v1/past-weather.ashx?q={city},{country}&date=2018-07-20&enddate=2019-07-20&key={API_Keys.WorldWeather}&format=json";
+            return url;
+        }
+        private async Task<string> RecommendTripDateBasedOnWeather(Destination destination)
+        {
+            string recommendation;
+            string url = ConvertAddressToWeatherUrl(destination.Address);
+            WeatherHistory weatherHistory = await _weatherRequest.GetHistoricalWeather(url);
+            List<int> positiveScores = new List<int>();
+
+            foreach (var item in weatherHistory.data.weather)
+            {
+                if(double.Parse(item.mintempF) > 50 && double.Parse(item.maxtempF) <90)
+                {
+
+                    positiveScores.Add(int.Parse(item.mintempF));
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            if( positiveScores.Count > 500)
+            {
+                recommendation = "Go during their summer months";
+            }
+            else
+            {
+                recommendation = "The weather is too hard to determine right now. We need more time to recommend.";
+            }
+
+            return recommendation;
+
         }
     }
 }

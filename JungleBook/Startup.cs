@@ -37,7 +37,7 @@ namespace JungleBook
 				options.UseSqlServer(
 					Configuration.GetConnectionString("DefaultConnection")));
 			services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-			services.AddScoped<IWeatherRequest, Weather>();
+			services.AddScoped<IWeatherRequest, WeatherService>();
 			services.AddScoped<ISearchRequest, Eventful>();
 			services.AddScoped<IGoogleServices, GoogleServices>();
 			services.AddScoped<IHikingProject, HikingProject>();

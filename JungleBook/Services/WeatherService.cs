@@ -1,4 +1,5 @@
 ﻿using JungleBook.Contracts;
+using JungleBook.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace JungleBook.Services
 {
-    public class Weather : IWeatherRequest
+    public class WeatherService : IWeatherRequest
     {
         //public string ConvertToUrl(string city, string state, string country, DateTime date)
         //{
@@ -51,17 +52,16 @@ namespace JungleBook.Services
             }
             return null;
         }
-        public async Task<JObject> GetHistoricalWeather(string city, string state, string country, string startDate, string endDate)
+        public async Task<WeatherHistory> GetHistoricalWeather(string url)
         {
-            string url = $"https://api.worldweatheronline.com/premium/v1/past-weather.ashx?q={city},{state},{country}&date={startDate}&enddate={endDate}&key={API_Keys.WorldWeather}&format=json";
             using HttpClient client = new HttpClient();
             {
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
                     string json = await response.Content.ReadAsStringAsync();
-                    JObject fiveDayForecast = JsonConvert.DeserializeObject<JObject>(json);
-                    return fiveDayForecast;
+                    WeatherHistory history = JsonConvert.DeserializeObject<WeatherHistory>(json);
+                    return history;
                 }
             }
             return null;

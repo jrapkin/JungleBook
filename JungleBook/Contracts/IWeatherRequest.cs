@@ -11,6 +11,6 @@ namespace JungleBook.Contracts
 	{
 		Task<JObject> GetCurrentWeather(string city, string state, string country);
 		Task<JObject> GetFiveDayForecast(string city, string state, string country, string numberOfDays);
-		Task<JObject> GetHistoricalWeather(string city, string state, string country, string startDate, string endDate);
+		Task<WeatherHistory> GetHistoricalWeather(string url);
 	}
 }
