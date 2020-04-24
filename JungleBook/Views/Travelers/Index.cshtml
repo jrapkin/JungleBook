@@ -6,4 +6,25 @@
 
 <h1>Dashboard</h1>
 
+@using (Html.BeginForm("AddInvitedTraveler", "Travelers", FormMethod.Post))
+{
+    <div class="col-4">
+        <div class="input-group">
+            <div class="card-group">
+                <div class="card-body">
+                    <h5 class="card-title">Enter part one of the super secret code</h5>
+                    <input class="" type="text" name="userName" />
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Enter part two of the super secret code</h5>
+                    <input class="" type="text" name="tripName" />
+                </div>
+            </div>
+            <input style ="background-color: forestgreen" class="btn-block" type="submit" value="Submit" />
+        </div>
+    </div>
+
+}
+
 

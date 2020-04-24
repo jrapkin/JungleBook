@@ -20,7 +20,7 @@ namespace JungleBook.Controllers
 
 		public IActionResult Index()
 		{
-			return View();
+			return RedirectToAction("Index", "Travelers");
 		}
 
 		public IActionResult Privacy()

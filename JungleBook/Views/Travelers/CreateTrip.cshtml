@@ -13,6 +13,7 @@
     <div class="col-md-4">
         <form asp-action="CreateTrip">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Trip.TripId" />
             <div class="form-group">
                 <label asp-for="Trip.Name" class="control-label"></label>
                 <input asp-for="Trip.Name" class="form-control" />
