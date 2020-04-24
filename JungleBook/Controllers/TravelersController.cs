@@ -42,55 +42,54 @@ namespace JungleBook.Controllers
             }
             return View();
         }
-        //May be an unnecessary view, remove if not used.
 
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult Create(Traveler traveler)
-        //{
-        //    try
-        //    {
-        //        var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //        traveler.ApplicationUserId = userId;
-        //        _repo.Traveler.CreateTraveler(traveler);
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //ConsiderPartialView
-
-        public IActionResult CreateTrip()
+        public IActionResult GetCreateTrip(Trip trip)
         {
-           
-            TripViewModel tripViewModel = new TripViewModel()
+            TripViewModel tripViewModel;
+            if (trip.TripId == default)
             {
-                DestinationOptions = new MultiSelectList(_repo.Destination.GetAllDestinations(),"DestinationId", "Name")
+                 tripViewModel = new TripViewModel()
+                {
+                    DestinationOptions = new MultiSelectList(_repo.Destination.GetAllDestinations(), "DestinationId", "Name")
+                };
+                return View("CreateTrip",tripViewModel);
+            }
+            tripViewModel = new TripViewModel()
+            {
+                TravelerLoggedIn = GetLoggedInTraveler(),
+                Trip = trip,
+                TravelBuddies = _repo.Traveler.GetTravelBuddiesByTripId(trip.TripId).ToList(),
+                DestinationOptions = new MultiSelectList(_repo.Destination.GetDestinationsByTripId(trip.TripId), "DestinationId", "Name")
             };
             
-            return View(tripViewModel);
+            return View("CreateTrip", tripViewModel);
         }
         [HttpPost]
         public IActionResult CreateTrip(TripViewModel viewModelFromForm)
         {
             Traveler traveler = GetLoggedInTraveler();
             List<Destination> usersSelectedDestinations = ReturnSelectionAsDestinationList(viewModelFromForm.selectedDestinations).ToList();
-            CreateNewDestinations(usersSelectedDestinations);
-            _repo.Trip.CreateTrip(viewModelFromForm.Trip);
-            _repo.Save();
+            if(_repo.Trip.FindByCondition(t=>t.TripId == viewModelFromForm.Trip.TripId).Any() == false)
+            {
+                CreateNewDestinations(usersSelectedDestinations);
+                _repo.Trip.CreateTrip(viewModelFromForm.Trip);
+                _repo.Save();
+            }
             _repo.UserProfile.CreateUserProfile(viewModelFromForm.Trip, traveler);
             viewModelFromForm.Trip.Destinations = usersSelectedDestinations;
             _repo.Trip.Update(viewModelFromForm.Trip);
             _repo.Save();
-            return RedirectToAction("Trips", traveler.TravelerId); 
+            return RedirectToAction("Trips"); 
         }
-        public IActionResult Trips(int travelerId)
+        [HttpPost]
+        public async Task<IActionResult> AddInvitedTraveler(string userName, string tripName)
+        {
+            UserProfile profile = await _repo.UserProfile.GetUserProfileByInviteCode(userName, tripName);
+            Trip trip = _repo.Trip.GetTripById(profile.TripId.GetValueOrDefault());
+
+            return RedirectToAction("GetCreateTrip", trip);
+        }
+        public IActionResult Trips()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
@@ -113,44 +112,66 @@ namespace JungleBook.Controllers
             tripFromDb.Destinations = _repo.Destination.GetDestinationsByTripId(id).ToList();
             return View(tripFromDb);
         }
-        public IActionResult PlanTrip(int tripId)
+        //public IActionResult EmailInvitationPartialView()
+        //{
+        //    Traveler traveler = GetLoggedInTraveler();
+        //    Message message = new Message()
+        //    {
+        //        SenderAddress = traveler.Email,
+        //    };
+        //    return ViewComponent("EmailInvitationViewComponent", message);
+        //}
+        [HttpPost]
+        public IActionResult SendInvitations(TripViewModel modelFromForm)
+        {
+            modelFromForm.TravelerLoggedIn = GetLoggedInTraveler();
+            modelFromForm.Trip = _repo.Trip.GetTripById(modelFromForm.Trip.TripId);
+            List<string> recipients = modelFromForm.Message.RecipientAddress.Split(", ").ToList();
+            modelFromForm.Message.MessageBody += EmailInvitation.CreateInvitationMessageWithInvitationCode(modelFromForm);
+            MimeMessage email = EmailInvitation.CreateEmail(modelFromForm.Message.SenderAddress, recipients, modelFromForm.Message.MessageBody);
+            EmailInvitation.SendEmailInvitation(email, API_Keys.EmailAddress, API_Keys.EmailPassword);
+            return RedirectToAction("PlanTrip", new { id = modelFromForm.Trip.TripId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PlanTrip(TripViewModel viewModelFromEventsSearch, int id)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Traveler traveler = _repo.Traveler.GetTravelerByUserId(userId);
             TripViewModel tripViewModel = new TripViewModel()
             {
                 TravelerLoggedIn = traveler,
-                TravelBuddies = _repo.UserProfile.GetAllTravelersByTrip(tripId),
-                UserProfile = _repo.UserProfile.GetUserProfileByIds(traveler.TravelerId, tripId)
+                TravelBuddies = await _repo.UserProfile.GetAllTravelersByTripAsync(id),
+                UserProfile = await _repo.UserProfile.GetUserProfileByIdsAsync(traveler.TravelerId, id),
+                Trip = _repo.Trip.GetTripById(id),
+                Message = new Message()
+                {
+                    SenderAddress = traveler.Email
+                }
             };
-            tripViewModel.DayActivities = _repo.DayActivity.GetActivitiesByDay(tripViewModel.UserProfile.Trip.Destinations);
-            return View(tripViewModel);
+            
+            if (viewModelFromEventsSearch.SearchResults != null )
+            {
+                tripViewModel.SearchResults = viewModelFromEventsSearch.SearchResults;
+            }
+            //tripViewModel.Trip.Destinations = _repo.Destination.GetDestinationsByTripId(tripId).ToList();
+            //if (_repo.DayActivity.FindByCondition(da => da.Day == tripViewModel.Trip.Destinations.Where(d => d.Days.Distinct() == da.Day)).Any())
+            //{
+            //    tripViewModel.DayActivities = _repo.DayActivity.FindAll().ToList();
+            //};
+            //tripViewModel.DayActivities = _repo.DayActivity.GetActivitiesByDay(tripViewModel.UserProfile.Trip.Destinations);
+            return  View(tripViewModel);
         }
-        public IActionResult InviteCollaborators()
-        {
-            Message message = new Message();
-            message.SenderAddress = this.User.FindFirstValue(ClaimTypes.Email.ToLower());
-            return View(message);
-        }
+
         [HttpPost]
-        public IActionResult InviteCollaborators(Message message)
+        public async Task<PartialViewResult> ShowEvents(TripViewModel modelFromView, string location, string keyword)
         {
-            List<string> recipients = message.RecipientAddress.Split(", ").ToList();
-            MimeMessage email = EmailInvitation.CreateEmail(message.SenderAddress, recipients, message.MessageBody);
-            EmailInvitation.SendEmailInvitation(email, API_Keys.EmailAddress, API_Keys.EmailPassword);
-            return RedirectToAction(nameof(Index));
+            EventSearchResult events = await _searchRequest.Search(location, keyword);
+            modelFromView.SearchResults = events;
+
+            return PartialView("PlanTrip", modelFromView);
         }
-        
-        public IActionResult ShowEvents()
-        {
-            return PartialView("ShowEvents");
-        }
-        [HttpPost]
-        public async Task<PartialViewResult> ShowEvents(string location, string eventKeyword)
-        {
-            JObject events = await _searchRequest.Search(location, eventKeyword);
-            return PartialView(events);
-        }
+
         private string ConvertAddressToUrl(Address address)
         {   
             string url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
