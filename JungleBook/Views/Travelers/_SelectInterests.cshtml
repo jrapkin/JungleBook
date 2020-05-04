@@ -7,13 +7,13 @@
 
 <div class="container-fluid">
 <h5>Recommendations By Interests</h5>
-<h6> Enter some interests by type or keyword</h6>
+<h6> Select some interests to see what we recommend</h6>
 <p>
-    <button class="btn-sm btn-primary" data-toggle="collapse" data-target="#searchForm" role="button" aria-expanded="true" aria-controls="searchForm">Close Tab</button>
+    <button class="btn-sm btn-primary" data-toggle="collapse" data-target="#selectInterests" role="button" aria-expanded="false" aria-controls="selectInterests">Toggle Choices</button>
 </p>
 <div class="row">
-    <div class="col-md-auto">
-        <div class="collapse" id="searchForm">
+    <div class="col-sm-auto">
+        <div class="collapse" id="selectInterests">
             <form asp-action="SelectInterests" asp-controller="Travelers">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Trip.TripId" />

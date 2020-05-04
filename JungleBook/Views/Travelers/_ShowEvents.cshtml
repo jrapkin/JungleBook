@@ -8,11 +8,11 @@
 <div class="container-fluid">
     <h5>Search For Events</h5>
         <p>
-            <button class="btn-sm btn-primary" data-toggle="collapse" data-target="#searchForm" role="button" aria-expanded="true" aria-controls="searchForm">Toggle Search</button>
+            <button class="btn-sm btn-primary" data-toggle="collapse" data-target="#searchEvents" role="button" aria-expanded="true" aria-controls="searchEvents">Toggle Search</button>
        </p>
     <div class="row">
-        <div class="col-md-auto">
-            <div class="collapse" id="searchForm">
+        <div class="col-sm-auto">
+            <div class="collapse" id="searchEvents">
                 <form asp-action="ShowEvents" asp-controller="Travelers" >
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="Trip.TripId" />
@@ -26,7 +26,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Location" class="control-label"></label>
-                        <textarea asp-for="Location" class="form-control"></textarea>
+                        <input asp-for="Location" class="form-control" />
                         <span asp-validation-for="Location" class="text-danger"></span>
                     </div>
                     <div class="form-group">
