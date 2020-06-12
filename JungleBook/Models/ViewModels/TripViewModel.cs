@@ -25,6 +25,7 @@ namespace JungleBook.Models.ViewModels
 		public CampingResult CampingResults { get; set; }
 		public HikingResult HikingResult { get; set; }
 		public PlaceResults PlaceResults { get; set; }
-
+		public List<HikingResult> ListOfHikingResults { get; set; }
+		public List<PlaceResults> ListOfPlaceResults { get; set; }
 	}
 }
