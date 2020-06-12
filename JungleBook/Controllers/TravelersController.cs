@@ -144,6 +144,8 @@ namespace JungleBook.Controllers
                     SenderAddress = traveler.Email
                 }
             };
+            tripViewModel.DestinationOptions = new MultiSelectList(_repo.Destination.GetDestinationsByTripId(tripViewModel.Trip.TripId), "DestinationId", "Name");
+
             if (viewModelFromEventsSearch.SearchResults != null)
             {
                 tripViewModel.SearchResults = viewModelFromEventsSearch.SearchResults;
@@ -172,20 +174,35 @@ namespace JungleBook.Controllers
         public async Task<PartialViewResult> SelectInterests(TripViewModel modelFromView)
         {
 
-            List<Destination> destinations = _repo.Destination.GetDestinationsByTripId(modelFromView.Trip.TripId).ToList();
-            List<Address> addressesToCall = GetAddressesForLocationSearch(destinations);
-
+            List<Destination> usersSelectedDestinations = ReturnSelectionAsDestinationList(modelFromView.selectedDestinations).ToList();
+            List<Address> addressesToCall = GetAddressesForLocationSearch(usersSelectedDestinations);
             switch (modelFromView.SelectedInterest)
             {
                 case "resturant":
-                    modelFromView.PlaceResults = await _googleServices.PlacesSearch(addressesToCall.FirstOrDefault().Latitude.ToString(),
-                        addressesToCall.FirstOrDefault().Longitude.ToString(), modelFromView.SelectedInterest);
+                    modelFromView.ListOfPlaceResults = new List<PlaceResults>();
+                    foreach (Address address in addressesToCall)
+                    {
+                        modelFromView.ListOfPlaceResults.Add(await _googleServices.PlacesSearch(address.Latitude.ToString(),
+                        address.Longitude.ToString(), modelFromView.SelectedInterest));
+                    }
+                    break;
+                case "camping":
+                    //TO DO: Replace with new camping search function
+                    //modelFromView.ListOfCampingResults = new List<CampingResult>();
+                    //foreach (Address address in addressesToCall)
+                    //{
+                    //    modelFromView.ListOfCampingResults.Add(await _hikingService.SearchForCampgrounds(address.Latitude.ToString(),
+                    //            address.Longitude.ToString()));
+                    //}
                     break;
                 case "hiking":
-                case "camping":
                 case "outdoors":
-                    modelFromView.HikingResult = await _hikingService.SearchForHikingSpots(addressesToCall.FirstOrDefault().Latitude.ToString(),
-                            addressesToCall.FirstOrDefault().Longitude.ToString());
+                    modelFromView.ListOfHikingResults = new List<HikingResult>();
+                    foreach (Address address in addressesToCall)
+                    {
+                        modelFromView.ListOfHikingResults.Add(await _hikingService.SearchForHikingSpots(address.Latitude.ToString(),
+                            address.Longitude.ToString()));
+                    }
                     break;
             }
             return PartialView("PlanTrip", modelFromView);
@@ -202,6 +219,7 @@ namespace JungleBook.Controllers
             };
             return View(mapViewModel);
         }
+        //HELPER METHODS:
 
         private List<Address> GetAddressesForLocationSearch(List<Destination> destinations)
         {
@@ -338,7 +356,7 @@ namespace JungleBook.Controllers
                 if (double.Parse(item.mintempF) > 50 && double.Parse(item.maxtempF) < 90)
                 {
 
-                    positiveScores.Add(int.Parse(item.mintempF));
+                    positiveScores.Add(int.Parse(item.maxtempF));
                 }
                 else
                 {

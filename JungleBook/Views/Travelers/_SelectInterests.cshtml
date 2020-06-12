@@ -18,9 +18,18 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Trip.TripId" />
                 <div class="form-group">
-                <label asp-for="Interests" class="control-label"></label>
-                <select asp-for="SelectedInterest" asp-items='Model.Interests' class="form-control"></select>
-                <span asp-validation-for="SelectedInterest" class="text-danger"></span>
+                    <label asp-for="Interests" class="control-label"></label>
+                    <select asp-for="SelectedInterest" asp-items='Model.Interests' class="form-control"></select>
+                    <span asp-validation-for="SelectedInterest" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DestinationOptions" class="control-label">Destination Options</label>
+                    <select asp-for="selectedDestinations" asp-items="Model.DestinationOptions" class=" form-control"></select>
+                    <span asp-validation-for="selectedDestinations" class="text-danger"></span>
+                    @*@using (Html.BeginForm(Model.selectedDestinations))
+                    {
+                        @Html.ListBoxFor(m => m.selectedDestinations, Model.DestinationOptions, Model.selectedDestinations)
+                    }*@
                 </div>
                 <div class="form-group">
                     <input type="submit" value="See whats out there" class="btn btn-primary" id="searchButton" />
@@ -30,72 +39,82 @@
     </div>
 </div>
 
-@if (Model.CampingResults != null)
+@*@if (Model.ListOfCampingResults != null)
 {
-    <div class="container">
-        <div class="col">
-            <div class="card-columns">
-                @foreach (Campground item in Model.CampingResults.campgrounds)
-                {
-                    <div class="card">
-                        @if (item.imgUrl != null)
-                        {
-                            <img class="card-img-top" src="@item.imgUrl">
-                        }
-                        <div class="card-body">
-                            <h4 class="card-title">@item.name</h4>
-                            <a href="@item.url" class="btn btn-primary">Check Their Page</a>
+    @foreach (CampingResult campingResult in Model.ListOfCampingResults)
+    {
+        <div class="container">
+            <div class="col">
+                <div class="card-columns">
+                    @foreach (Campground item in campingResult.campgrounds)
+                    {
+                        <div class="card">
+                            @if (item.imgUrl != null)
+                            {
+                                <img class="card-img-top" src="@item.imgUrl">
+                            }
+                            <div class="card-body">
+                                <h4 class="card-title">@item.name</h4>
+                                <a href="@item.url" class="btn btn-primary">Check Their Page</a>
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </div>
-    </div>
-}
-@if (Model.HikingResult != null)
+     }
+}*@
+@if (Model.ListOfHikingResults != null)
 {
-    <div class="container">
-        <div class="col">
-            <div class="card-columns">
-                @foreach (Trail item in Model.HikingResult.trails)
-                {
-                    <div class="card">
-                        @if (item.imgSmall != null)
-                        {
-                            <img class="card-img-top" src="@item.imgSmall">
-                        }
-                        <div class="card-body">
-                            <h4 class="card-title">@item.name</h4>
-                            <p class="card-text">@item.summary</p>
-                            <a href="@item.url" class="btn btn-primary">Check Their Page</a>
+    @foreach (HikingResult hikingResult in Model.ListOfHikingResults)
+    {
+        <div class="container">
+            <div class="col">
+                <div class="card-columns">
+                    @foreach (Trail item in hikingResult.trails)
+                    {
+                        <div class="card">
+                            @if (item.imgSmall != null)
+                            {
+                                <img class="card-img-top" src="@item.imgSmall">
+                            }
+                            <div class="card-body">
+                                <h4 class="card-title">@item.name</h4>
+                                <p class="card-text">@item.summary</p>
+                                <p class="card-text">@item.location</p>
+                                <a href="@item.url" class="btn btn-primary">Check Their Page</a>
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </div>
-    </div>
+     }
 }
-@if (Model.PlaceResults != null)
-{
-    <div class="container">
-        <div class="col">
-            <div class="card-columns">
-                @foreach (Result item in Model.PlaceResults.results)
-                {
-                    <div class="card">
-                        @if (item.icon != null)
-                        {
-                            <img class="card-img-top" src="@item.icon">
-                        }
-                        <div class="card-body">
-                            <h4 class="card-title">@item.name</h4>
+@if (Model.ListOfPlaceResults != null)
+    @foreach (PlaceResults placeResults in Model.ListOfPlaceResults)
+    {
+        <div class="container">
+            <div class="col">
+                <div class="card-columns">
+                    @foreach (Result item in placeResults.results)
+                    {
+                        <div class="card">
+                            @if (item.icon != null)
+                            {
+                                <img class="card-img-top" src="@item.icon">
+                            }
+                            <div class="card-body">
+                                <h4 class="card-title">@item.name </h4>
+                                <p class="card-text">@item.rating, out of @item.user_ratings_total reviews.</p>
+                            </div>
+                            
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </div>
-    </div>
-}
+    }
 
 
 </div>
