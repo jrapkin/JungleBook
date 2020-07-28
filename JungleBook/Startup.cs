@@ -1,15 +1,14 @@
 using JungleBook.Contracts;
-using JungleBook.Data;
-using JungleBook.Models;
 using JungleBook.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Persistence;
+using Persistence.Identity;
 using System.Security.Claims;
 
 namespace JungleBook
@@ -26,9 +25,7 @@ namespace JungleBook
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(
-					Configuration.GetConnectionString("DefaultConnection")));
+			services.AddPersistence(Configuration);
 			services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 			services.AddScoped<IWeatherRequest, WeatherService>();
 			services.AddScoped<ISearchRequest, Eventful>();
