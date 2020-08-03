@@ -1,4 +1,4 @@
-namespace JungleBook.Models
+namespace JungleBook.Models.ViewModels
 {
 	public class ErrorViewModel
 	{

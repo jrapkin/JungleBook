@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Application.Dtos;
+using Domain.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace JungleBook.Models.ViewModels
@@ -13,19 +15,10 @@ namespace JungleBook.Models.ViewModels
 		public UserProfile UserProfile { get; set; }
 		public Trip Trip { get; set; }
 		public List<DayActivity> DayActivities { get; set; }
-		public List<int> selectedDestinations { get; set; }
+		public List<int> SelectedDestinations { get; set; }
 		public MultiSelectList DestinationOptions { get; set; }
-		public Message Message { get; set; }
 		//for partial view
-		public string Location { get; set; }
-		public string Keyword { get; set; }
 		public List<SelectListItem> Interests { get; set; }
-		public string SelectedInterest { get; set; }
-		public EventSearchResult SearchResults { get; set; }
-		public CampingResult CampingResults { get; set; }
-		public HikingResult HikingResult { get; set; }
-		public PlaceResults PlaceResults { get; set; }
-		public List<HikingResult> ListOfHikingResults { get; set; }
-		public List<PlaceResults> ListOfPlaceResults { get; set; }
+		public Message Message { get; set; }
 	}
 }

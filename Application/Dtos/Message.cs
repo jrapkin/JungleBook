@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace JungleBook.Models
+namespace Application.Dtos
 {
 	public class Message
 	{

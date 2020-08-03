@@ -1,4 +1,6 @@
-﻿namespace JungleBook.Models.ViewModels
+﻿using Domain.Models;
+
+namespace JungleBook.Models.ViewModels
 {
 	public class DetailsViewModel
 	{

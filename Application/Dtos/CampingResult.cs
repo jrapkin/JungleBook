@@ -1,5 +1,5 @@
 ﻿
-namespace JungleBook.Models
+namespace Application.Dtos
 {
 
 	public class CampingResult

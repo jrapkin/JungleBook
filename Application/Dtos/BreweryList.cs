@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JungleBook.Models
+namespace Application.Dtos
 {
 
 	public class BreweryList
