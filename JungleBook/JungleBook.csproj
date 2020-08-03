@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,33 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200416163632_Initial.cs" />
-    <Compile Remove="Migrations\20200416163632_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20200416164240_Initial.cs" />
-    <Compile Remove="Migrations\20200416164240_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20200416164503_Initial.cs" />
-    <Compile Remove="Migrations\20200416164503_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20200416165936_Initial.cs" />
-    <Compile Remove="Migrations\20200416165936_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20200416170114_Initial.cs" />
-    <Compile Remove="Migrations\20200416170114_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20200416170127_Initial.cs" />
-    <Compile Remove="Migrations\20200416170127_Initial.Designer.cs" />
-    <Compile Remove="Migrations\20200416170302_Initial.cs" />
-    <Compile Remove="Migrations\20200416170302_Initial.Designer.cs" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="RestSharp" Version="106.11.4" />
+    <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="106.11.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mailkit" Version="2.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="RestSharp" Version="106.10.1" />
-    <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="106.10.1" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Contracts\" />
   </ItemGroup>
 
 </Project>

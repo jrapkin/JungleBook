@@ -1,11 +1,12 @@
-﻿using JungleBook.Contracts;
-using JungleBook.Models;
+﻿using Application.Dtos;
+using Application.Interfaces;
+using Domain;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace JungleBook.Services
+namespace Infrastructure.Services
 {
 	public class GoogleServices : IGoogleServices
 	{

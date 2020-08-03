@@ -1,10 +1,11 @@
-﻿using JungleBook.Contracts;
-using JungleBook.Models;
+﻿using Application.Dtos;
+using Application.Interfaces;
+using Domain;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace JungleBook.Services
+namespace Infrastructure.Services
 {
 	public class HikingProject : IHikingProject
 	{
