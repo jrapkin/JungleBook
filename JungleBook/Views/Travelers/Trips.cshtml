@@ -1,4 +1,4 @@
-﻿@model IEnumerable<JungleBook.Models.Trip>
+﻿@model IEnumerable<Domain.Models.Trip>
 
 @{
     ViewData["Title"] = "Trips";
@@ -16,7 +16,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.EstimatedCost)
             </th>
             <th>
@@ -24,6 +24,15 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
+            </th>*@
+            <th>
+                Estimated Cost
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
             </th>
             <th></th>
         </tr>

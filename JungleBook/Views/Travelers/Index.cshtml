@@ -1,15 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Dashboard</h1>
+<div>
+<h1 id="h1Text">Dashboard</h1>
+
 @using (Html.BeginForm("AddInvitedTraveler", "Travelers", FormMethod.Post))
 {
-    <div class="col-4">
+    <div class="col-4" id="invitationElements">
         <div class="input-group">
             <div class="card-group">
                 <div class="card-body">
@@ -22,10 +25,10 @@
                     <input class="" type="text" name="tripName" />
                 </div>
             </div>
-            <input style="background-color: forestgreen" class="btn-block" type="submit" value="Submit" />
+            <input class="btn-block" type="submit" value="Submit" />
         </div>
     </div>
 
 }
-
+</div>
 

@@ -1,4 +1,4 @@
-﻿@model JungleBook.Models.ViewModels.TripViewModel
+﻿@model JungleBook.Models.ViewModels.SearchByInterestsViewModel
 
 @{
     ViewData["Title"] = "ShowEvents";
@@ -14,7 +14,7 @@
 <div class="row">
     <div class="col-sm-auto">
         <div class="collapse" id="selectInterests">
-            <form asp-action="SelectInterests" asp-controller="Travelers">
+            <form id="SearchByInterestsForm" asp-action="SelectInterests" asp-controller="Travelers">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Trip.TripId" />
                 <div class="form-group">
@@ -24,15 +24,15 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="DestinationOptions" class="control-label">Destination Options</label>
-                    <select asp-for="selectedDestinations" asp-items="Model.DestinationOptions" class=" form-control"></select>
-                    <span asp-validation-for="selectedDestinations" class="text-danger"></span>
+                    <select asp-for="SelectedDestinations" asp-items="Model.DestinationOptions" class=" form-control"></select>
+                    <span asp-validation-for="SelectedDestinations" class="text-danger"></span>
                     @*@using (Html.BeginForm(Model.selectedDestinations))
                     {
                         @Html.ListBoxFor(m => m.selectedDestinations, Model.DestinationOptions, Model.selectedDestinations)
                     }*@
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="See whats out there" class="btn btn-primary" id="searchButton" />
+                    <input type="submit" value="See whats out there" class="btn btn-primary" id="InterestsSearchButton" />
                 </div>
             </form>
         </div>
@@ -66,38 +66,43 @@
 }*@
 @if (Model.ListOfHikingResults != null)
 {
-    @foreach (HikingResult hikingResult in Model.ListOfHikingResults)
+    @foreach (var hikingResult in Model.ListOfHikingResults)
     {
         <div class="container">
             <div class="col">
                 <div class="card-columns">
-                    @foreach (Trail item in hikingResult.trails)
+                    @foreach (var item in hikingResult.trails)
                     {
                         <div class="card">
                             @if (item.imgSmall != null)
                             {
                                 <img class="card-img-top" src="@item.imgSmall">
                             }
-                            <div class="card-body">
-                                <h4 class="card-title">@item.name</h4>
-                                <p class="card-text">@item.summary</p>
-                                <p class="card-text">@item.location</p>
-                                <a href="@item.url" class="btn btn-primary">Check Their Page</a>
-                            </div>
+                        <div class="card-body">
+                            <h4 class="card-title">@item.name</h4>
+                            <p class="card-text">@item.summary</p>
+                            <p class="card-text">@item.location</p>
+                            <a href="@item.url" class="btn btn-primary">Check Their Page</a>
+                            @*<button onclick="externalPage" class="btn btn-primary">Check Their Page</button>
+        <div id="externalPage">
+            <iframe src="@item.url" style="border:none;"></iframe>
+        </div>*@
+                        </div>
                         </div>
                     }
                 </div>
+
             </div>
         </div>
      }
 }
 @if (Model.ListOfPlaceResults != null)
-    @foreach (PlaceResults placeResults in Model.ListOfPlaceResults)
+    @foreach (var placeResults in Model.ListOfPlaceResults)
     {
         <div class="container">
             <div class="col">
                 <div class="card-columns">
-                    @foreach (Result item in placeResults.results)
+                    @foreach (var item in placeResults.results)
                     {
                         <div class="card">
                             @if (item.icon != null)
@@ -115,6 +120,5 @@
             </div>
         </div>
     }
-
-
 </div>
+

@@ -24,23 +24,23 @@
 <div class="row">
     <div class="col">
         <div class="collapse multi-collapse" id="SelectInterests">
-            <div class="card card-body" id="interestsPartial">
-                @await Html.PartialAsync("~/Views/Travelers/_SelectInterests.cshtml", Model)
+            <div class="card card-body" id="SearchByInterestPartial">
+                @await Html.PartialAsync("~/Views/Travelers/_SelectInterests.cshtml", new JungleBook.Models.ViewModels.SearchByInterestsViewModel() { Trip = Model.Trip, Interests = Model.Interests, DestinationOptions = Model.DestinationOptions})
             </div>
         </div>
     </div>
     <div class="col">
         <div class="collapse multi-collapse" id="SearchEvents">
-            <div class="card card-body" id="eventsPartial">
-                @await Html.PartialAsync("~/Views/Travelers/_ShowEvents.cshtml", Model)
+            <div class="card card-body" id="EventsPartialView">
+                @await Html.PartialAsync("~/Views/Travelers/_ShowEvents.cshtml", new JungleBook.Models.ViewModels.EventSearchViewModel() { Trip = Model.Trip })
             </div>
         </div>
     </div>
 
     <div class="col">
         <div class="multi-collapse collapse" id="EmailWindow">
-            <div class="card card-body" id="emailPartial">
-                @await Html.PartialAsync("~/Views/Travelers/_TripInvitationPartial.cshtml", Model)
+            <div class="card card-body" id="InvitationPartial">
+                @await Html.PartialAsync("~/Views/Travelers/_TripInvitationPartial.cshtml", new JungleBook.Models.ViewModels.TripInvitationViewModel() {TravelerLoggedIn = Model.TravelerLoggedIn, Trip = Model.Trip })
             </div>
         </div>
     </div>
