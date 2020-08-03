@@ -1,4 +1,4 @@
-﻿using JungleBook.Models;
+﻿using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

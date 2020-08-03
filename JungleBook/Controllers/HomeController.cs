@@ -1,4 +1,4 @@
-﻿using JungleBook.Models;
+﻿using JungleBook.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

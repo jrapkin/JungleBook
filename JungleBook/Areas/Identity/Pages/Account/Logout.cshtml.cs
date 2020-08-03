@@ -1,9 +1,9 @@
-﻿using JungleBook.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Infrastructure.Identity;
 using System.Threading.Tasks;
 
 namespace JungleBook.Areas.Identity.Pages.Account
