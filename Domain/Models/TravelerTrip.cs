@@ -2,13 +2,11 @@
 
 namespace Domain.Models
 {
-	public class UserProfile
+	public class TravelerTrip
 	{
-		[ForeignKey("Traveler")]
 		public int TravelerId { get; set; }
+		public int? TripId { get; set; }		
 		public Traveler Traveler { get; set; }
-		[ForeignKey("Trip")]
-		public int? TripId { get; set; }
 		public Trip Trip { get; set; }
 
 	}
